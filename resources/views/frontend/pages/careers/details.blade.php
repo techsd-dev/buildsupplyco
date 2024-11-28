@@ -42,8 +42,8 @@
                 <div class="card-body">
                     <h4>Interested to work with BUILDSUPPLY?</h4>
                     <p>Share your details with us, and we will get back to you.</p>
-                    <form action="https://gurukulnation.com/apply/job" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="_token" value="frh6FnEafHalPj3GGC2LfdpV2dZqGxmybNKDcDwM">
+                    <form action="{{ route('applyJob') }}" method="post" enctype="multipart/form-data">
+                        @csrf
                         <div class="form-group">
                             <label>Job Title</label>
                             <input required="" name="job_title" type="text" value="{{ $career->designation }}" readonly="" class="form-control" placeholder="Title">
@@ -76,6 +76,10 @@
                         <div class="form-group">
                             <label>Current Location <span class="text-danger">*</span></label>
                             <input required="" name="current_location" type="text" class="form-control" placeholder="Current Location">
+                        </div>
+                        <div class="form-group">
+                            <label>Exprience <span class="text-danger">*</span></label>
+                            <input required="" name="exprience" type="text" class="form-control" placeholder="exprience">
                         </div>
                         <div class="form-group form_check">
                             <input type="checkbox" required="" name="ready_to_relocate" value="yes" checked="checked"><label>Are you ready to relocate?</label>

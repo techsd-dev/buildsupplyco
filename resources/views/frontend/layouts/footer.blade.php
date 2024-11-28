@@ -51,12 +51,12 @@ $cat = App\Models\Category::orderBy('id', 'DESC')->limit(7)->get();
                             @else
                             <a href="{{ route('user.login') }}">Sign in</a>
                             @endif
-                            <li><a href="#">Order History</a></li>
                             <li><a href="{{ route('wishlist.index') }}">Wish List</a></li>
+                            <li><a href="{{ route('faqs') }}">FAQs</a></li>
+                            <!-- <li><a href="#">Order History</a></li>
                             <li><a href="#">Customer Service</a></li>
                             <li><a href="#">Returns / Exchange</a></li>
-                            <li><a href="{{ route('faqs') }}">FAQs</a></li>
-                            <li><a href="#">Product Support</a></li>
+                            <li><a href="#">Product Support</a></li> -->
                         </ul>
                     </div>
                 </div>
@@ -64,10 +64,13 @@ $cat = App\Models\Category::orderBy('id', 'DESC')->limit(7)->get();
             <div class="col-lg-3 col-sm-6 mt-sm-45">
                 <div class="footer-widget">
                     <div class="subscribe-form">
-                        <h3>Sign Up to <strong>Newsletter</strong></h3>
-                        <p>Subscribe our newsletter gor get notification about information discount.</p>
-                        <input type="text" placeholder="Your email address" />
-                        <button>Subscribe</button>
+                        <h3>My <strong>Store</strong></h3>
+                        <p>Shop No. 16, Block D & E, Ocean Infrahights Pvt Ltd, Golden-I, Plot No.11, Techzone-4, Greater Noida West, Greater Noida,Gautam Buddha Nagar
+
+</p>
+                        <!-- <input type="text" placeholder="Your email address" /> -->
+                        <strong>Store Timings: 10AM to 8PM</strong>
+                        <!-- <button>Store Timings: 10AM to 8PM</button> -->
                     </div>
                     <div class="social-icons style-2">
                         <strong>GET IN TOUCH !</strong>

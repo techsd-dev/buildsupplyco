@@ -3,6 +3,8 @@
 $settings = App\Models\Setting::find(1);
 $brands = App\Models\Brand::orderBy('id', 'DESC')->limit(4)->get();
 $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
+$categoriesForFilter = App\Models\Category::orderBy('id', 'DESC')->get();
+$subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 ?>
 
 <body>
@@ -34,7 +36,7 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 									<a href="<?php echo e($settings->insta); ?>" target="_blank"><i class="fa fa-instagram"></i></a>
 									<a href="<?php echo e($settings->ytb); ?>" target="_blank"><i class="fa fa-youtube"></i></a>
 								</div>
-								<div class="currency-bar lang-bar pull-right">
+								<!-- <div class="currency-bar lang-bar pull-right">
 									<ul>
 										<li><a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/icons/gb.png')); ?>" alt="" />English <i class="fa fa-angle-down"></i></a>
 											<ul>
@@ -55,7 +57,7 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 										</li>
 										<li><span>|</span></li>
 									</ul>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -174,93 +176,16 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 						<div class="col-xl-2 col-lg-3 ">
 							<div class="collapse-menu mt-0">
 								<ul>
-									<li><a href="javascript:void(0);" class="vm-menu"><i class="fa fa-navicon"></i><span>All Departments</span></a>
+									<li><a href="javascript:void(0);" class="vm-menu"><i class="fa fa-navicon"></i><span>Categories</span></a>
 										<ul class="vm-dropdown d-hidden" style="display: none;">
-											<li><a href="#"><i class="fa fa-laptop"></i>Computer <b class="caret"></b></a>
-												<ul class="mega-menu">
-													<li class="megamenu-single">
-														<span class="mega-menu-title">Shop Page</span>
-														<ul>
-															<li><a href="#">Products Block Top</a></li>
-															<li><a href="#">Products Block Bottom</a></li>
-															<li><a href="#">Shop Grid 5 Column</a></li>
-															<li><a href="#">Shop List</a></li>
-															<li><a href="#">Shop width Normal</a></li>
-															<li><a href="#">Shop List Normal</a></li>
-														</ul>
-													</li>
-													<li class="megamenu-single">
-														<span class="mega-menu-title">Featured</span>
-														<ul>
-															<li><a href="#">Thumbnails Left</a></li>
-															<li><a href="#">Thumbnails Right</a></li>
-															<li><a href="#">Thumbnails Bottom</a></li>
-															<li><a href="#">Thumbnails Full</a></li>
-															<li><a href="#">Single 2 Colums</a></li>
-															<li><a href="#">Tabs Content</a></li>
-														</ul>
-													</li>
-													<li class="megamenu-single">
-														<span class="mega-menu-title">Shop Page</span>
-														<ul>
-															<li><a href="#">Simple Product</a></li>
-															<li><a href="#">Grouped Product</a></li>
-															<li><a href="#">Variable Product</a></li>
-															<li><a href="#">External Product</a></li>
-															<li><a href="#">My account</a></li>
-															<li><a href="#">Checkout</a></li>
-														</ul>
-													</li>
-													<li class="megamenu-single">
-														<span class="mega-menu-title">Features</span>
-														<ul>
-															<li><a href="#">Detail with Video</a></li>
-															<li><a href="#">Variations Swatches</a></li>
-															<li><a href="#">With Countdown Timer</a></li>
-															<li><a href="#">Catalog Mode</a></li>
-														</ul>
-													</li>
+											<?php $__currentLoopData = $categoriesForFilter; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+											<li class="category-item" data-id="<?php echo e($row->id); ?>" data-slug="<?php echo e($row->slug); ?>">
+												<a href="#"><i class="fa fa-laptop"></i><?php echo e($row->name); ?> <b class="caret"></b></a>
+												<ul class="mega-menu subcategory-list" style="display: none;">
+													<!-- Subcategories will be dynamically loaded here -->
 												</ul>
 											</li>
-											<li><a href="#"><i class="fa fa-desktop"></i>TV & Smart box <b class="caret"></b></a>
-												<ul class="mega-menu">
-													<li class="megamenu-single">
-														<span class="mega-menu-title">Shop Page</span>
-														<ul>
-															<li><a href="#">Products Block Top</a></li>
-															<li><a href="#">Products Block Bottom</a></li>
-															<li><a href="#">Shop Grid 5 Column</a></li>
-															<li><a href="#">Shop List</a></li>
-															<li><a href="#">Shop width Normal</a></li>
-															<li><a href="#">Shop List Normal</a></li>
-														</ul>
-													</li>
-													<li class="megamenu-single">
-														<span class="mega-menu-title">Featured</span>
-														<ul>
-															<li><a href="#">Thumbnails Left</a></li>
-															<li><a href="#">Thumbnails Right</a></li>
-															<li><a href="#">Thumbnails Bottom</a></li>
-															<li><a href="#">Thumbnails Full</a></li>
-															<li><a href="#">Single 2 Colums</a></li>
-															<li><a href="#">Detail with Accessories</a></li>
-															<li><a href="#">Tabs Content</a></li>
-															<li><a href="#">Accordion Tabs</a></li>
-														</ul>
-													</li>
-												</ul>
-											</li>
-											<li><a href="#"><i class="fa fa-camera"></i>Camera & Photography</a></li>
-											<li><a href="#"><i class="fa fa-headphones"></i>Headphones</a></li>
-											<li><a href="#"><i class="fa fa-music"></i>Musical Instruments</a></li>
-											<li><a href="#"><i class="fa fa-mobile"></i>Smart phone & Tablets</a></li>
-											<li><a href="#"><i class="fa fa-flash"></i>Accessories</a></li>
-											<li><a href="#"><i class="fa fa-microphone"></i>Home Audio & Theater</a></li>
-											<li><a href="#"><i class="fa fa-print"></i>Printer</a></li>
-											<li><a href="#"><i class="fa fa-fax"></i>Fax machine</a></li>
-											<li><a href="#"><i class="fa fa-spoon"></i>Household goods</a></li>
-											<li><a href="#"><i class="fa fa-clock-o"></i>Watch</a></li>
-											<li><a href="#"><i class="fa fa-random"></i>Other</a></li>
+											<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 										</ul>
 									</li>
 								</ul>
@@ -303,14 +228,14 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 									$cartItems = Auth::check() ? Cart::where('user_id', Auth::id())->with('product')->get() : collect();
 
 									$totalPrice = $cartItems->sum(function ($item) {
-									return $item->product->prd_discount_price * $item->quantity;
+									return $item->product->prd_price * $item->quantity;
 									});
 									?>
 
 									<li>
 										<a href="javascript:void(0);" class="minicart-icon">
 											<i class="icon_bag_alt"></i>
-											<span class="total-price">$<?php echo e($totalPrice); ?></span>
+											<span class="total-price">₹<?php echo e($totalPrice); ?></span>
 											<span class="cart-count"><?php echo e($cartItems->count()); ?></span>
 										</a>
 										<div class="cart-dropdown">
@@ -321,7 +246,7 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 														<a href="#"><img src="<?php echo e(asset('public/uploads/products/' . $item->product->prd_image)); ?>" alt="" /></a>
 													</div>
 													<div class="mini-cart-heading">
-														<span>$<?php echo e($item->product->prd_discount_price); ?> x <?php echo e($item->quantity); ?></span>
+														<span>₹<?php echo e($item->product->prd_price); ?> x <?php echo e($item->quantity); ?></span>
 														<h5><a href="#"><?php echo e($item->product->prd_name); ?></a></h5>
 													</div>
 													<div class="mini-cart-remove">
@@ -336,7 +261,7 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 											</ul>
 											<div class="minicart-total fix">
 												<span class="pull-left">Total:</span>
-												<span class="pull-right">$<?php echo e($totalPrice); ?></span>
+												<span class="pull-right">₹<?php echo e($totalPrice); ?></span>
 											</div>
 											<div class="mini-cart-checkout">
 												<a href="<?php echo e(route('cart.index')); ?>" class="btn-common view-cart">VIEW CART</a>
@@ -441,16 +366,8 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 							<nav id="my-menu">
 								<ul>
 									<li><a href="<?php echo e(url('/')); ?>">Home <b class="caret"></b></a>
-										<!-- <ul class="submenu">
-											<li><a href="index.html">Home Version 1</a></li>
-											<li><a href="index-2.html">Home Version 2</a></li>
-											<li><a href="index-3.html">Home Version 3</a></li>
-											<li><a href="index-4.html">Home Version 4</a></li>
-											<li><a href="index-5.html">Home Version 5</a></li>
-											<li><a href="index-6.html">Home Version 6</a></li>
-										</ul> -->
 									</li>
-									<li>
+									<!-- <li>
 										<a href="#">
 											<span class="text-label label-featured">Featured</span>
 											Shop
@@ -495,30 +412,33 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 												</ul>
 											</li>
 										</ul>
-									</li>
+									</li> -->
 									<li>
 										<a href="#">
-											<span class="text-label label-hot">Hot</span>
-											Pages
+											<span class="text-label label-hot"></span>
+											Category
 											<b class="caret"></b>
 										</a>
 										<ul class="submenu">
-											<li><a href="<?php echo e(route('about.us')); ?>">About Us</a></li>
-											<li><a href="faq.html">FAQ</a></li>
-											<li><a href="coming-soon.html">Coming Soon</a></li>
-											<li><a href="404.html">404 Eror</a></li>
+											<?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+											<li><a href="<?php echo e(route('prodList', $cat->slug)); ?>"><?php echo e($cat->name); ?></a></li>
+											<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 										</ul>
 									</li>
-									<li><a href="#">Blog <b class="caret"></b></a>
+									<li><a href="#">Our Brands <b class="caret"></b></a>
 										<ul class="submenu">
-											<li><a href="blog.html">Blog</a></li>
-											<li><a href="blog-grid.html">Blog Grid</a></li>
-											<li><a href="blog-fullwidth.html">Blog Full Width</a></li>
-											<li><a href="blog-details.html">Blog Details</a></li>
+											<?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+											<li><a href="<?php echo e(route('by.brnd.prodList', $brand->id)); ?>"><?php echo e($brand->name); ?></a></li>
+											<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 										</ul>
 									</li>
+									<li><a href="<?php echo e(route('wishlist.index')); ?>">Wishlist</a></li>
+									<li><a href="<?php echo e(route('cart.index')); ?>">Shopping Cart</a></li>
+									<li><a href="<?php echo e(route('checkout.index')); ?>">Checkout</a></li>
+									<li><a href="<?php echo e(route('faqs')); ?>">FAQ</a></li>
+									<li><a href="<?php echo e(route('fr.careers')); ?>">Careers</a></li>
+									<li><a href="<?php echo e(route('about.us')); ?>">About Us</a></li>
 									<li><a href="<?php echo e(route('contact.us')); ?>">Contact</a></li>
-									<li><a href="#">Purchase Theme</a></li>
 								</ul>
 							</nav>
 						</div>
@@ -526,7 +446,7 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 						<!--category-->
 						<div class="collapse-menu mt-0 pull-right">
 							<ul>
-								<li><a href="javascript:void(0);" class="vm-menu"><i class="fa fa-navicon"></i><span>All Departments</span></a>
+								<li><a href="javascript:void(0);" class="vm-menu"><i class="fa fa-navicon"></i><span>Menus</span></a>
 									<ul class="vm-dropdown">
 										<li><a href="#"><i class="fa fa-laptop"></i>Computer <b class="caret"></b></a>
 											<ul class="mega-menu">
@@ -623,7 +543,7 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 		</div>
 	</header>
 	<!--header-area end-->
-
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
 		document.querySelectorAll('.remove-cart-item').forEach(button => {
 			button.addEventListener('click', function() {
@@ -651,6 +571,44 @@ $categories = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 						})
 						.catch(error => console.error('Error:', error));
 				}
+			});
+		});
+
+		$(document).ready(function() {
+			$('.category-item').on('mouseenter', function() {
+				const categoryId = $(this).data('id');
+				const categorySlug = $(this).data('slug');
+				const subcategoryList = $(this).find('.subcategory-list');
+				var routeProductList = "<?php echo e(route('prodList', ['slug' => ':slug'])); ?>";
+
+				// Clear previous subcategories
+				subcategoryList.empty();
+				const baseUrl = "<?php echo e(url('/get-subcategories')); ?>";
+				// Make AJAX call to fetch subcategories
+				$.ajax({
+					url: `${baseUrl}/${categoryId}`, // Dynamic URL
+					type: 'GET',
+					success: function(response) {
+						// Populate subcategory list
+						if (response.subCategories.length > 0) {
+							response.subCategories.forEach(subCat => {
+								const url = routeProductList.replace(':slug', subCat.slug);
+								subcategoryList.append(`<li><a href="${url}">${subCat.name}</a></li>`);
+							});
+						} else {
+							subcategoryList.append('<li><a href="#">No Subcategories</a></li>');
+						}
+						subcategoryList.show(); // Show subcategories
+					},
+					error: function(xhr) {
+						console.error('Error fetching subcategories:', xhr);
+					}
+				});
+			});
+
+			$('.category-item').on('mouseleave', function() {
+				const subcategoryList = $(this).find('.subcategory-list');
+				subcategoryList.hide(); // Hide the subcategories on mouse leave
 			});
 		});
 	</script>

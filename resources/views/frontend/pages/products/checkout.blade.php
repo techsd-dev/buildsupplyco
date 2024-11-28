@@ -5,11 +5,11 @@
 <!-- Checkout Area Start -->
 <div class="checkout-area mt-15">
     <div class="container">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-lg-12">
                 <p>Returning customer? <a href="#">Click here</a> to login</p>
             </div>
-        </div>
+        </div> -->
         <div class="row mt-10">
             <div class="col-lg-8">
                 <h4>Billing Details</h4>
@@ -59,11 +59,11 @@
                             <tr>
                                 <td>{{ $item->product->prd_name }}</td>
                                 <td>
-                                    ₹{{ number_format($item->product->prd_discount_price ?? $item->product->prd_price, 2) }}
+                                    ₹{{ number_format($item->product->prd_price ?? $item->product->prd_price, 2) }}
                                 </td>
                                 <td>{{ $item->quantity }}</td>
                                 <td>
-                                    ₹{{ number_format(($item->product->prd_discount_price ?? $item->product->prd_price) * $item->quantity, 2) }}
+                                    ₹{{ number_format(($item->product->prd_price ?? $item->product->prd_price) * $item->quantity, 2) }}
                                 </td>
                             </tr>
                             @endforeach

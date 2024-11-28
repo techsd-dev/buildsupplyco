@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Products\ProductController;
 use App\Http\Controllers\Admin\Products\SubCategoryController;
 use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -62,9 +63,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/career/update/{id}', [CareerController::class, 'update'])->name('career.update');
     Route::get('career/delete/{id}', [CareerController::class, 'destroy'])->name('career.delete');
     Route::get('career/filter', [CareerController::class, 'careerFilter'])->name('career.search');
+    Route::get('job/seekers', [CareerController::class, 'jobSeekers'])->name('jobSeekers');
     
     // Faqs routes
-    Route::get('/faqs', [FaqController::class, 'index'])->name('faqs');
+    Route::get('/faqs', [FaqController::class, 'index'])->name('admin.faqs');
     Route::post('/faqs/store', [FaqController::class, 'store'])->name('faqs.store');
     Route::post('/faqs/update/{id}', [FaqController::class, 'update'])->name('faqs.update');
     Route::get('faqs/delete/{id}', [FaqController::class, 'destroy'])->name('faqs.delete');
@@ -115,7 +117,11 @@ Route::prefix('admin')->group(function () {
     Route::get('about-us', [CommonController::class, 'aboutUs'])->name('admn.about.us');
     Route::post('about-us-store', [CommonController::class, 'aboutUsStore'])->name('about.us.store');
 
-    Route::get('contact-us', [CommonController::class, 'contactUs'])->name('contact.us');
+    Route::get('contact-us', [CommonController::class, 'contactUs'])->name('admin.contact.us');
+    Route::get('orders', [OrderController::class, 'orders'])->name('orders');
+    Route::get('orders-details/{id}', [OrderController::class, 'viewOrderDetails'])->name('orders.details');
+    Route::post('/orders-update-status/{orderId}', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
 });
 
 // Frontend routes
@@ -171,6 +177,9 @@ Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name
 Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
 Route::get('/wishlists', [WishlistController::class, 'index'])->name('wishlist.index');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/get-subcategories/{id}', [FrontendController::class, 'getSubcategories'])->name('getSubcategories');
+Route::post('/apply-job', [FrontendController::class, 'storeJobApplication'])->name('applyJob');
+
 
 
 

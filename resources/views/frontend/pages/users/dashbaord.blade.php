@@ -115,44 +115,51 @@
                                             <tr>
                                                 <th>Order</th>
                                                 <th>Date</th>
-                                                <th>Status</th>
-                                                <th>Total</th>
-                                                <th class="action">Action</th>
+                                                <th>Product Name</th>
+                                                <th>Quantity</th>
+                                                <th>Payment Status</th>
+                                                <th>Order Status</th>
+                                                <th>Total Amount</th>
+                                                <!-- <th class="action">Action</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            @foreach ($orders as $order)
+                                            @foreach ($order->orderItems as $item)
                                             <tr>
-                                                <td>#8083</td>
-                                                <td>Sep 9, 2021</td>
-                                                <td>Completed</td>
-                                                <td>$350</td>
-                                                <td class="action"><a href="#" class="view-order">View Order</a></td>
-                                            </tr>
+                                                <td>#{{ $order->id }}</td>
+                                                <td>{{ $order->created_at->format('M d, Y') }}</td>
+                                                <td>{{ $item->product->prd_name }}</td>
+                                                <td>{{ $item->quantity }}</td>
 
-                                            <tr>
-                                                <td>#8283</td>
-                                                <td>Sep 8, 2021</td>
-                                                <td>Pending</td>
-                                                <td>$190</td>
-                                                <td class="action"><a href="#" class="view-order">View Order</a></td>
-                                            </tr>
+                                                {{-- Accessing the transactions for the order --}}
+                                                <td>
+                                                    @if($order->transactions->isNotEmpty())
+                                                    {{-- If there are multiple transactions, we can display the status of the first one --}}
+                                                    {{ $order->transactions->first()->status ?? 'Pending' }}
+                                                    @else
+                                                    Pending
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{$order->status}}
+                                                </td>
 
-                                            <tr>
-                                                <td>#8483</td>
-                                                <td>Sep 7, 2021</td>
-                                                <td>Completed</td>
-                                                <td>$399</td>
-                                                <td class="action"><a href="#" class="view-order">View Order</a></td>
+                                                <td>₹{{ $order->total / 100 }}</td>
+                                                {{-- <td class="action"><a href="{{ url('orders.view', $order->id) }}" class="view-order">View Order</a></td> --}}
                                             </tr>
+                                            @endforeach
+                                            @endforeach
                                         </tbody>
+
                                     </table>
                                 </div>
+
                                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="my-address">
                                     <div class="address-form">
                                         <div class="inner">
                                             <form class="tg-form" action="{{ route('user.address.save') }}" method="post">
-                                             @csrf
+                                                @csrf
                                                 <div class="form-group">
                                                     <label for="inputAddress">Address</label>
                                                     <input type="text" name="address" class="form-control" id="inputAddress" value="{{ Auth::user()->address }}" placeholder="1234 Main St">
@@ -171,7 +178,7 @@
                                                         <select id="inputState" name="state" class="form-control">
                                                             <option selected>--Choose State--</option>
                                                             @foreach($states as $state)
-                                                              <option value="{{ $state->id }}" {{ Auth::user()->state == $state->id ? 'selected' : '' }}>{{ $state->state_name }}</option>
+                                                            <option value="{{ $state->id }}" {{ Auth::user()->state == $state->id ? 'selected' : '' }}>{{ $state->state_name }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -190,7 +197,7 @@
                                     <div class="account-detail-form">
                                         <div class="inner">
                                             <form class="tg-form" action="{{ route('update.auth.users.profile') }}" method="post" enctype="multipart/form-data">
-                                                @csrf 
+                                                @csrf
                                                 <div class="form-row">
                                                     <div class="form-group col-md-6">
                                                         <label for="inputfname">Name</label>

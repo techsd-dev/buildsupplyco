@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AboutUs;
 use App\Models\Address;
 use App\Models\Banner;
+use App\Models\Brand;
 use App\Models\Career;
 use App\Models\Category;
 use App\Models\Faq;
@@ -12,6 +13,7 @@ use App\Models\privacyPolicy;
 use App\Models\Product;
 use App\Models\ReturnNShipmentPolicy;
 use App\Models\Setting;
+use App\Models\SubCategory;
 use App\Models\TermsNCondition;
 use App\Models\VulnerabilityDisclosuePolicy;
 use Illuminate\Http\Request;
@@ -25,29 +27,79 @@ class FrontendController extends Controller
         $data['subBanners'] = Banner::orderBy('id', 'ASC')->skip(2)->take(4)->get();
         $data['categories'] = Category::orderBy('id', 'DESC')->get();
         $data['products'] = Product::with(['brand', 'category', 'subcategory'])
-            ->limit(5)->get();
-        $data['products2'] = Product::with(['brand', 'category', 'subcategory'])->get();
+            ->limit(3)->where('status', 1)->get();
+        $data['productsByCat'] = Product::with(['brand', 'category', 'subcategory'])
+            ->orderBy('id', 'DESC')->where('status', 1)->get();
+        $data['products2'] = Product::with(['brand', 'category', 'subcategory'])->where('status', 1)->get();
         return view('frontend.index', $data);
     }
 
     public function productList($slug)
     {
+        // First, check if the slug belongs to a category
         $category = Category::where('slug', $slug)->first();
-        if (!$category) {
-            return redirect()->back()->with('error', 'Category not found');
+
+        if ($category) {
+            // If category is found
+            $data['category'] = $category;
+
+            // Apply filters for category-based query
+            $query = Product::with(['brand', 'category', 'subcategory'])
+                ->where('category_id', $category->id);
+        } else {
+            // If it's not a category, check for subcategory
+            $subcategory = Subcategory::where('slug', $slug)->first();
+
+            if ($subcategory) {
+                // If subcategory is found
+                $data['subcategory'] = $subcategory;
+
+                // Apply filters for subcategory-based query
+                $query = Product::with(['brand', 'category', 'subcategory'])
+                    ->where('sub_category_id', $subcategory->id);
+            } else {
+                // If neither category nor subcategory is found, redirect back
+                return redirect()->back()->with('error', 'Category or Subcategory not found');
+            }
         }
-        $products = Product::with(['brand', 'category', 'subcategory'])
-            ->where('category_id', $category->id)
-            ->get();
-        return view('frontend.pages.products.list', compact('products', 'category'));
+
+        // Apply price range filter and brand filter to both category and subcategory products
+        $minPrice = request('min_price', 0);
+        $maxPrice = request('max_price', PHP_INT_MAX);
+        $brandIds = request('brands', []);
+
+        if ($minPrice && $maxPrice) {
+            $query->whereBetween('prd_price', [$minPrice, $maxPrice]);
+        }
+
+        if (!empty($brandIds)) {
+            $query->whereIn('brand_id', $brandIds);
+        }
+
+        // Get the filtered products
+        $data['products'] = $query->get();
+
+        // Fetch additional data for categories, brands, etc.
+        $data['productsByCat'] = Product::with(['brand', 'category', 'subcategory'])
+            ->orderBy('id', 'DESC')->where('status', 1)->get();
+        $data['categories'] = Category::orderBy('id', 'DESC')->get();
+        $data['brands'] = Brand::orderBy('id', 'DESC')->get();
+
+        // Return view with filtered products and additional data
+        return view('frontend.pages.products.list', $data);
     }
-    
+
+
     public function productListFilterByBrand($id)
     {
-        $products = Product::with(['brand', 'category', 'subcategory'])
+        $data['products'] = Product::with(['brand', 'category', 'subcategory'])
             ->where('brand_id', $id)
             ->get();
-        return view('frontend.pages.products.list', compact('products'));
+        $data['productsByCat'] = Product::with(['brand', 'category', 'subcategory'])
+            ->orderBy('id', 'DESC')->where('status', 1)->get();
+        $data['categories'] = Category::orderBy('id', 'DESC')->get();
+        $data['brands'] = Brand::orderBy('id', 'DESC')->get();
+        return view('frontend.pages.products.list', $data);
     }
 
     public function productQuickView($id)
@@ -61,7 +113,7 @@ class FrontendController extends Controller
                 'name' => $product->prd_name,
                 'image' => asset('public/uploads/products/' . ($product->prd_image ?? 'default.jpg')),
                 'price' => number_format($product->prd_discount_price, 2),
-                'disc_price' => $product->prd_price ? '$' . number_format($product->prd_price, 2) : '',
+                'disc_price' => $product->prd_price ? '₹' . number_format($product->prd_price, 2) : '',
                 'description' => $product->prd_description,
                 'qty' => $product->qty,
                 'categories' => $product->category->name,
@@ -155,13 +207,51 @@ class FrontendController extends Controller
         }
     }
 
-    public function careersList(){
+    public function careersList()
+    {
         $data = Career::orderBy('id', 'DESC')->get();
         return view('frontend.pages.careers.index', compact('data'));
     }
-    
-    public function careersDetails($slug){
+
+    public function careersDetails($slug)
+    {
         $career = Career::where('slug', $slug)->firstOrFail();
         return view('frontend.pages.careers.details', compact('career'));
+    }
+
+    public function getSubcategories($id)
+    {
+        $subCategories = SubCategory::where('category_id', $id)->get();
+
+        return response()->json([
+            'subCategories' => $subCategories
+        ]);
+    }
+
+    public function storeJobApplication(Request $request)
+    {
+        // Store the uploaded resume file
+        $imageName = '';
+        if ($request->hasFile('resume')) {
+            $prdImage = $request->file('resume');
+            $imageName = time() . '_' . $prdImage->getClientOriginalName();
+            $prdImage->move(public_path('uploads/categories'), $imageName);
+        }
+        // Insert the data into the database
+        DB::table('apply_jobs')->insert([
+            'job_title' => $request->input('job_title'),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'referenced_by' => $request->input('referenced_by'),
+            'mobile' => $request->input('mobile'),
+            'current_location' => $request->input('current_location'),
+            'exprience' => $request->input('exprience'),
+            'ready_to_relocate' => $request->input('ready_to_relocate'),
+            'job_description' => $request->input('job_description'),
+            'resume' => $imageName,
+            'created_at' => now(),
+        ]);
+
+        return redirect('careers')->with('success', 'Job application submitted successfully!');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -10,15 +11,20 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index()
     {
         $states = DB::table('states')->get();
-        return view('frontend.pages.users.dashbaord', compact('states'));
+        $orders = Order::with([
+            'user',
+            'orderItems.product',
+            'transactions'
+        ])
+            ->where('user_id', auth()->id()) 
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
+        return view('frontend.pages.users.dashbaord', compact('states', 'orders'));
     }
 
     public function updateProfile(Request $request)
@@ -50,7 +56,7 @@ class UserController extends Controller
         $user->save();
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
-    
+
     public function updateAddress(Request $request)
     {
         $user = Auth::user();

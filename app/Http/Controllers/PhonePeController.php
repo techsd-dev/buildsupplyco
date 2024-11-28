@@ -6,6 +6,7 @@ use App\Models\BookApartment;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use App\Models\Users;
 use Carbon\Carbon;
 use DateTime;
@@ -51,12 +52,17 @@ class PhonePecontroller extends Controller
                 // Add Order Items
                 $cartItems = Cart::where('user_id', auth()->id())->get();
                 foreach ($cartItems as $item) {
-                    OrderItem::create([
-                        'order_id' => $order->id,
-                        'price' => 00.00,
-                        'product_id' => $item->product_id,
-                        'quantity' => $item->quantity,
-                    ]);
+                    $product = Product::find($item->product_id);
+                    $totalAmt = $product->prd_price * $item->quantity;
+                    if ($product) {
+                        OrderItem::create([
+                            'order_id' => $order->id,
+                            'price' => $product->prd_price,
+                            'total' => $totalAmt,
+                            'product_id' => $item->product_id,
+                            'quantity' => $item->quantity,
+                        ]);
+                    }
                 }
 
                 // Clear cart after order

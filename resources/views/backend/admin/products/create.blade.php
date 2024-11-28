@@ -111,8 +111,8 @@
                                             <div class="col-lg-6">
                                                 <div class="form-floating">
                                                     <select name="status" class="form-select" id="brandSelect" required>
-                                                        <option value="'active'">Active</option>
-                                                        <option value="'inactive'">Inactive</option>
+                                                        <option value="1">Active</option>
+                                                        <option value="0">Inactive</option>
                                                     </select>
                                                     <label for="brandSelect">Status <span class="text-danger">*</span></label>
                                                 </div>

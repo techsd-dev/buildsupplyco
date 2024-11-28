@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Career;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CareerController extends Controller
@@ -135,5 +136,10 @@ class CareerController extends Controller
             'success' => true,
             'careers' => $careers
         ]);
+    }
+
+    public function jobSeekers(){
+        $data = DB::table('apply_jobs')->orderBy('id', 'DESC')->paginate(10);
+        return view('backend.admin.careers.jobseekerslist', compact('data'));
     }
 }

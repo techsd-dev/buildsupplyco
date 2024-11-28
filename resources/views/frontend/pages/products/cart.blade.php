@@ -38,7 +38,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="cart-product-price">₹{{ $item->product->prd_discount_price }}</span>
+                                    <span class="cart-product-price">₹{{ $item->product->prd_price }}</span>
                                 </td>
                                 <td>
                                     <div class="cart-quantity-changer">
@@ -50,7 +50,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="cart-product-price">₹{{ $item->product->prd_discount_price * $item->quantity }}</span>
+                                    <span class="cart-product-price">₹{{ $item->product->prd_price * $item->quantity }}</span>
                                 </td>
                                 <td>
                                     <div class="product-remove">
@@ -158,13 +158,13 @@
                         <table class="table">
                             <tr>
                                 <td>SUB TOTAL:</td>
-                                <td><span>₹{{ $cartItems->sum(fn($item) => $item->product->prd_discount_price * $item->quantity) }}</span></td>
+                                <td><span>₹{{ $cartItems->sum(fn($item) => $item->product->prd_price * $item->quantity) }}</span></td>
                             </tr>
                             <tr>
                                 <td>GRAND TOTAL:</td>
                                 <td>
                                     <span>
-                                        ₹{{ $cartItems->sum(fn($item) => $item->product->prd_discount_price * $item->quantity) - (session('discount') ? session('discount') * $cartItems->sum(fn($item) => $item->product->prd_discount_price * $item->quantity) : 0) }}
+                                        ₹{{ $cartItems->sum(fn($item) => $item->product->prd_price * $item->quantity) - (session('discount') ? session('discount') * $cartItems->sum(fn($item) => $item->product->prd_price * $item->quantity) : 0) }}
                                     </span>
                                 </td>
                             </tr>

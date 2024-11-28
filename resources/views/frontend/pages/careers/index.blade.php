@@ -1,6 +1,8 @@
 @extends('frontend.layouts.master')
 @section('title', 'Careers')
 @section('content')
+
+@include('frontend.flash')
 <style>
     .career-list {
         background: hsl(0 0% 96% / 1);

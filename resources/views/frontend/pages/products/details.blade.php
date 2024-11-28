@@ -91,8 +91,8 @@
                                     <a href="#"><i class="ti-truck"></i> Free Delivery</a>
                                 </div>
                                 <div class="product-price-rating">
-                                    <del>${{ $product->prd_price }}</del>
-                                    <span>${{ $product->prd_discount_price }}</span>
+                                    {{--<del>₹{{ $product->prd_price }}</del>--}}
+                                    <span>₹{{ $product->prd_price }}</span>
                                     <div class="pull-right">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>

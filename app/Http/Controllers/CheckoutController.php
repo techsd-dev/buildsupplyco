@@ -12,7 +12,7 @@ class CheckoutController extends Controller
     public function index()
     {
         $cartItems = Cart::where('user_id', auth()->id())->get();
-        $total = $cartItems->sum(fn($item) => $item->product->prd_discount_price * $item->quantity);
+        $total = $cartItems->sum(fn($item) => $item->product->prd_price * $item->quantity);
         $grandTotal = $cartItems->sum(fn($item) => $item->discounted_total);
         $discount = $total - $grandTotal;
         return view('frontend.pages.products.checkout', compact('cartItems', 'total', 'grandTotal', 'discount'));

@@ -72,12 +72,32 @@
                     <div class="collapse menu-dropdown" id="careers">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('faqs') }}" class="nav-link">Faqs</a>
+                                <a href="{{ route('jobSeekers') }}" class="nav-link">Job Seekers List</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="collapse menu-dropdown" id="careers">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.faqs') }}" class="nav-link">Faqs</a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                 <!-- end careers & faqs Menu -->
+                 <!-- end orders Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#orders" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="orders">
+                        <i class="ri-dashboard-2-line"></i> <span>Order Management</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="orders">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('orders') }}" class="nav-link">Orders</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                 <!-- end orders Menu -->
 
 
                 <li class="nav-item">
@@ -134,7 +154,7 @@
                     <div class="collapse menu-dropdown" id="contentManagement">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('contact.us') }}" class="nav-link">Contact Us</a>
+                                <a href="{{ route('admin.contact.us') }}" class="nav-link">Contact Us</a>
                             </li>
                         </ul>
                     </div>
