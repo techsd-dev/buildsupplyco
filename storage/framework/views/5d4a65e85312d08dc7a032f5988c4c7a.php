@@ -154,7 +154,7 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 						</div>
 						<div class="col-lg-2">
 							<div class="register-login pull-right">
-								<?php if(Auth::check()): ?>
+								<?php if(Auth::check() && Auth::user()->role == 0): ?>
 								<a href="<?php echo e(url('user-dashboard')); ?>" class="btn btn-sm btn-success text-white"><strong><i class="fa fa-user"></i></strong>
 									Profile
 								</a>

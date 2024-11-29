@@ -1,6 +1,11 @@
 
 <?php $__env->startSection('title', 'Home Page'); ?>
 <?php $__env->startSection('content'); ?>
+<style>
+	.product-wishlist.added i {
+		background-color: red;
+	}
+</style>
 <!--slider-area start-->
 <div class="slider-area">
 	<div class="container-fluid">
@@ -276,65 +281,66 @@
 				</div>
 				<!--products-tab-->
 				
-				<!--best sellers-->
-				<div class="best-sellers mt-minus-40">
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="section-title">
-								<h3>Best Sellers</h3>
-							</div>
-						</div>
-					</div>
-					<div class="row best-seller cv-visible">
-						<?php $__currentLoopData = $products2; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-						<div class="col-lg-3">
-							<div class="product-single">
-								<div class="product-title">
-									<small><a href="<?php echo e(route('product.details', $row->slug)); ?>"><?php echo e($row->category->name); ?></a></small>
-									<h4><a href="<?php echo e(route('product.details', $row->slug)); ?>"><?php echo e($row->prd_name); ?></a></h4>
-								</div>
-								<div class="product-thumb">
-									<a href="<?php echo e(route('product.details', $row->slug)); ?>"><img src="<?php echo e(url('public/uploads/products/' . ($row->prd_image ?? 'default.jpg'))); ?>" alt="" /></a>
-									<div class="downsale"><span>-</span>₹0</div>
-									<div class="product-quick-view">
-										<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-									</div>
-								</div>
-								<div class="product-price-rating">
-									<span>₹<?php echo e($row->prd_discount_price); ?></span>
-									<del>₹<?php echo e($row->prd_price); ?></del>
-								</div>
-								<div class="product-action">
-									<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-									<a href="javascript:void(0);" class="add-to-cart" data-product-id="<?php echo e($row->id); ?>">Add to Cart</a>
-									<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-								</div>
-							</div>
-						</div>
-						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-					</div>
-				</div>
-				<!--banner-section-->
-				<div class="row mt-40">
-					<?php $__currentLoopData = $products2->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-					<div class="col-xl-4 col-lg-6">
-						<div class="banner-sm hover-effect">
-							<img src="<?php echo e(url('public/uploads/products/' . ($row->prd_image ?? 'default.jpg'))); ?>" alt="" />
-							<div class="banner-info">
-								<div class="product-value">
-									<span>₹<?php echo e($row->prd_price); ?></span>
-									<!-- <del>$229.99</del> -->
-								</div>
-								<p>Sale Up To <strong>0% <br /> Off</strong> <?php echo e($row->prd_name); ?></p>
-								<a href="<?php echo e(route('product.details', $row->slug)); ?>" class="btn-common width-115">Buy Now</a>
-							</div>
-						</div>
-					</div>
-					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-				</div>
+<!--best sellers-->
+<div class="best-sellers mt-minus-40">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="section-title">
+				<h3>Best Sellers</h3>
 			</div>
 		</div>
 	</div>
+	<div class="row best-seller cv-visible">
+		<?php $__currentLoopData = $products2; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+		<div class="col-lg-3">
+			<div class="product-single">
+				<div class="product-title">
+					<small><a href="<?php echo e(route('product.details', $row->slug)); ?>"><?php echo e($row->category->name); ?></a></small>
+					<h4><a href="<?php echo e(route('product.details', $row->slug)); ?>"><?php echo e($row->prd_name); ?></a></h4>
+				</div>
+				<div class="product-thumb">
+					<a href="<?php echo e(route('product.details', $row->slug)); ?>"><img src="<?php echo e(url('public/uploads/products/' . ($row->prd_image ?? 'default.jpg'))); ?>" alt="" /></a>
+					<div class="downsale"><span>-</span>₹0</div>
+					<div class="product-quick-view">
+						<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
+					</div>
+				</div>
+				<div class="product-price-rating">
+					<span>₹<?php echo e($row->prd_discount_price); ?></span>
+					<del>₹<?php echo e($row->prd_price); ?></del>
+				</div>
+				<div class="product-action">
+					<a href="<?php echo e(route('checkout.index', ['product_id' => $row->id])); ?>" class="product-buy-now">Buy Now</a>
+					<a href="javascript:void(0);" class="add-to-cart" data-product-id="<?php echo e($row->id); ?>">Add to Cart</a>
+					<a href="javascript:void(0);" data-product-id="<?php echo e($row->id); ?>" class="product-wishlist"><i class="ti-heart"></i></a>
+					<input type="hidden" value="1" min="1" class="product-quantity" />
+				</div>
+			</div>
+		</div>
+		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+	</div>
+</div>
+<!--banner-section-->
+<div class="row mt-40">
+	<?php $__currentLoopData = $products2->take(3); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+	<div class="col-xl-4 col-lg-6">
+		<div class="banner-sm hover-effect">
+			<img src="<?php echo e(url('public/uploads/products/' . ($row->prd_image ?? 'default.jpg'))); ?>" alt="" />
+			<div class="banner-info">
+				<div class="product-value">
+					<span>₹<?php echo e($row->prd_price); ?></span>
+					<!-- <del>$229.99</del> -->
+				</div>
+				<p>Sale Up To <strong>0% <br /> Off</strong> <?php echo e($row->prd_name); ?></p>
+				<a href="<?php echo e(route('product.details', $row->slug)); ?>" class="btn-common width-115">Buy Now</a>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+</div>
+</div>
+</div>
+</div>
 </div>
 <!--products-area end-->
 
@@ -391,9 +397,9 @@
 								<?php endif; ?>
 							</div>
 							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
+							    <a href="<?php echo e(route('checkout.index', ['product_id' => $product->id])); ?>" class="product-buy-now">Buy Now</a>
 								<a href="javascript:void(0);" class="add-to-cart" data-product-id="<?php echo e($product->id); ?>">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
+								<a href="javascript:void(0);" data-product-id="<?php echo e($product->id); ?>" class="product-wishlist"><i class="ti-heart"></i></a>
 								<input type="hidden" value="1" min="1" class="product-quantity" />
 							</div>
 						</div>
@@ -430,9 +436,9 @@
 								<?php endif; ?>
 							</div>
 							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
+							   <a href="<?php echo e(route('checkout.index', ['product_id' => $product->id])); ?>" class="product-buy-now">Buy Now</a>
 								<a href="javascript:void(0);" class="add-to-cart" data-product-id="<?php echo e($product->id); ?>">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
+								<a href="javascript:void(0);" data-product-id="<?php echo e($product->id); ?>" class="product-wishlist"><i class="ti-heart"></i></a>
 								<input type="hidden" value="1" min="1" class="product-quantity" />
 							</div>
 						</div>
@@ -451,999 +457,10 @@
 </div>
 <!--products-tab end-->
 
-
-
-<!--products-tab start-->
-<!-- <div class="products-tab-area">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-lg-3 col-md-3 pr-0">
-				<div class="section-title">
-					<h3>Home & Appliances</h3>
-				</div>
-			</div>
-			<div class="col-lg-9 col-md-9 pl-0">
-				<div class="product-nav-tabs style-3">
-					<ul class="nav nav-tabs text-right">
-						<li><a class="active" data-toggle="tab" href="#accessories">All Accessories</a></li>
-						<li><a data-toggle="tab" href="#tv-fridge">TVs/Fridge/Laundry</a></li>
-						<li><a data-toggle="tab" href="#kitchen-appliance">Kitchen Appliance</a></li>
-						<li><a data-toggle="tab" href="#seasonal-appliances">Seasonal Appliances</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="tab-content">
-			<div id="accessories" class="tab-pane active">
-				<div class="row product-carousel-fullwidth cv-visible">
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/15.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/16.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/17.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/18.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/19.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/20.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/3.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/4.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="tv-fridge" class="tab-pane fade">
-				<div class="row product-carousel-fullwidth cv-visible">
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout Edition</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/1.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved 27-Inch FHD Monitor</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/2.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/3.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/4.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout Edition</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/1.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved 27-Inch FHD Monitor</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/2.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/3.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/4.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="kitchen-appliance" class="tab-pane fade">
-				<div class="row product-carousel-fullwidth cv-visible">
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout Edition</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/15.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved 27-Inch FHD Monitor</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/16.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/17.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/18.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout Edition</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/15.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved 27-Inch FHD Monitor</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/16.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/17.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/18.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="seasonal-appliances" class="tab-pane fade">
-				<div class="row product-carousel-fullwidth cv-visible">
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout Edition</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/5.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved 27-Inch FHD Monitor</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/6.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/7.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/8.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Camera</a></small>
-								<h4><a href="#">Blue Yeti USB Microphone Blackout Edition</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/5.jpg')); ?>" alt="" /></a>
-								<div class="downsale"><span>-</span>$25</div>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<span>$195.00</span>
-								<del>$229.99</del>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Iphone</a></small>
-								<h4><a href="#">Samsung CF591 Series Curved 27-Inch FHD Monitor</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/6.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$395.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Electronics</a></small>
-								<h4><a href="#">iPATROL Riley V2 Bonus Bundle - WiFi</a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/7.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$195.00</span>
-								</div>
-								<div class="pull-right">
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-									<i class="fa fa-star-o"></i>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-lg-3">
-						<div class="product-single">
-							<div class="product-title">
-								<small><a href="#">Macbook</a></small>
-								<h4><a href="#">Swivl C Series RobotSW3322-C1 </a></h4>
-							</div>
-							<div class="product-thumb">
-								<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/shop/8.jpg')); ?>" alt="" /></a>
-								<div class="product-quick-view">
-									<a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">quick view</a>
-								</div>
-							</div>
-							<div class="product-price-rating">
-								<div class="pull-left">
-									<span>$255.00</span>
-									<del>329.99</del>
-								</div>
-							</div>
-							<div class="product-action">
-								<a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
-								<a href="javascript:void(0);" class="add-to-cart">Add to Cart</a>
-								<a href="javascript:void(0);" class="product-wishlist"><i class="ti-heart"></i></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div> -->
-<!--products-tab end-->
-
 <!--recently-viewed-products-start-->
 <div class="recent-viewed-products">
 	<div class="container-fluid">
 		<div class="row">
-			<!-- <div class="col-xl-2">
-				<div class="sidebar-single">
-					<div class="section-title">
-						<h3>Latest Blogs</h3>
-					</div>
-					<div class="row blog-carousels mt-30">
-						<div class="col-lg-12">
-							<div class="blog-carousel">
-								<div class="blog-carousel-thumb">
-									<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/blog/sm/1.jpg')); ?>" alt="" /></a>
-								</div>
-								<div class="blog-carousel-desc">
-									<small>22 Apr 2019</small>
-									<h4><a href="#">A blender is a kitchen and laboratory appliance</a></h4>
-									<a href="#" class="readmore">Read More </a>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="blog-carousel">
-								<div class="blog-carousel-thumb">
-									<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/blog/sm/2.jpg')); ?>" alt="" /></a>
-								</div>
-								<div class="blog-carousel-desc">
-									<small>22 Apr 2019</small>
-									<h4><a href="#">A blender is a kitchen and laboratory appliance</a></h4>
-									<a href="#" class="readmore">Read More </a>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="blog-carousel">
-								<div class="blog-carousel-thumb">
-									<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/blog/sm/3.jpg')); ?>" alt="" /></a>
-								</div>
-								<div class="blog-carousel-desc">
-									<small>22 Apr 2019</small>
-									<h4><a href="#">A blender is a kitchen and laboratory appliance</a></h4>
-									<a href="#" class="readmore">Read More </a>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="blog-carousel">
-								<div class="blog-carousel-thumb">
-									<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/blog/sm/1.jpg')); ?>" alt="" /></a>
-								</div>
-								<div class="blog-carousel-desc">
-									<small>22 Apr 2019</small>
-									<h4><a href="#">A blender is a kitchen and laboratory appliance</a></h4>
-									<a href="#" class="readmore">Read More </a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> -->
 			<div class="col-xl-12 mt-sm-40">
 				<div class="row">
 					<div class="col-lg-12">
@@ -1485,32 +502,6 @@
 							</div>
 						</div>
 						<!--single-product-->
-						<!-- <div class="product-single style-2">
-							<div class="row align-items-center">
-								<div class="col-lg-6 p-0">
-									<div class="product-thumb">
-										<a href="#"><img src="<?php echo e(asset('public/frontend/assets/images/products/4.jpg')); ?>" alt="" /></a>
-									</div>
-								</div>
-								<div class="col-lg-6 p-0">
-									<div class="product-title">
-										<small><a href="#">Electronics</a></small>
-										<h4><a href="#">Vantech VP-153C Camera</a></h4>
-									</div>
-									<div class="product-price-rating">
-										<i class="fa fa-star-o"></i>
-										<i class="fa fa-star-o"></i>
-										<i class="fa fa-star-o"></i>
-										<i class="fa fa-star-o"></i>
-										<i class="fa fa-star-o"></i>
-									</div>
-									<div class="product-price-rating">
-										<span>$195.00</span>
-										<del>$229.99</del>
-									</div>
-								</div>
-							</div>
-						</div> -->
 					</div>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				</div>
@@ -1576,6 +567,35 @@
 				.catch(error => {
 					alert(error.message);
 				});
+		});
+	});
+
+	// add to wishlist 
+	$(document).on('click', '.product-wishlist', function() {
+		let productId = $(this).data('product-id');
+		let action = $(this).hasClass('added') ? 'remove' : 'add';
+
+		$.ajax({
+			url: action === 'add' ? "<?php echo e(route('wishlist.add')); ?>" : "<?php echo e(route('wishlist.remove')); ?>",
+			method: 'POST',
+			data: {
+				product_id: productId,
+				_token: '<?php echo e(csrf_token()); ?>'
+			},
+			success: function(response) {
+				if (response.status === 'success') {
+					let message = action === 'add' ? 'Added to wishlist!' : 'Removed from wishlist!';
+					alert(response.message);
+					window.location.reload();
+					if (action === 'add') {
+						$(`.product-wishlist[data-product-id="${productId}"]`).addClass('added');
+					} else {
+						$(`.product-wishlist[data-product-id="${productId}"]`).removeClass('added');
+					}
+				} else {
+					alert(response.message);
+				}
+			}
 		});
 	});
 </script>

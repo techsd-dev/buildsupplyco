@@ -44,54 +44,41 @@
 	<link rel="stylesheet" href="<?php echo e(asset('public/frontend/assets/css/responsive.css')); ?>">
 
 	<script>
-    function requestLocationAccess() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    const userId = <?php echo e(auth()->check() ? auth()->user()->id : 'null'); ?>; // Get user ID if authenticated
+        document.addEventListener("DOMContentLoaded", function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
 
-                    // Only send data if user ID is available
-                    if (userId) {
-                        // Send location data to the backend
-                        fetch("<?php echo e(route('save.location')); ?>", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>"
-                            },
-                            body: JSON.stringify({
-                                latitude: latitude,
-                                longitude: longitude,
-                                user_id: userId
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                console.log("Location saved successfully!");
-                            } else {
-                                console.warn("Failed to save location.");
-                            }
-                        })
-                        .catch(error => console.error("Error:", error));
-                    } else {
-                        console.log("User is not authenticated; skipping location save.");
+                        // Send the location data to  backend
+                        saveLocation(lat, lng);
+                    },
+                    function (error) {
+                        console.error("Location access denied or error occurred:", error.message);
                     }
+                );
+            } else {
+                console.error("Geolocation is not supported by this browser.");
+            }
+        });
+
+        function saveLocation(lat, lng) {
+            fetch("<?php echo e(route('save.location')); ?>", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>",
                 },
-                function(error) {
-                    console.warn("Error (" + error.code + "): " + error.message);
-                }
-            );
-        } else {
-            alert("Geolocation is not supported by this browser.");
+                body: JSON.stringify({ latitude: lat, longitude: lng }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("Location saved successfully:", data.message);
+                })
+                .catch((error) => {
+                    console.error("Error saving location:", error);
+                });
         }
-    }
-
-    // Trigger location access request when the page loads
-    window.onload = requestLocationAccess;
-</script>
-
-
+    </script>
 </head><?php /**PATH C:\xampp\htdocs\buildsupplyco\resources\views/frontend/layouts/css.blade.php ENDPATH**/ ?>

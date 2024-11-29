@@ -17,6 +17,7 @@ use App\Models\SubCategory;
 use App\Models\TermsNCondition;
 use App\Models\VulnerabilityDisclosuePolicy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FrontendController extends Controller
@@ -186,26 +187,70 @@ class FrontendController extends Controller
         return view('frontend.pages.termsncond', compact('data'));
     }
 
+    // saved user location 
     public function saveLocation(Request $request)
     {
-        // Validate incoming data
         $request->validate([
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
 
-        // Create a new address entry
-        $address = new Address();
-        $address->latitude = $request->latitude;
-        $address->longitude = $request->longitude;
+        if (Auth::check()) {
+            $userId = Auth::id();
 
-        // Save to the database
-        if ($address->save()) {
-            return response()->json(['success' => true]);
+            // Check if the authenticated user already has a saved location
+            $existingAddress = Address::where('user_id', $userId)->first();
+
+            if ($existingAddress) {
+                // Update the existing address
+                $existingAddress->latitude = $request->latitude;
+                $existingAddress->longitude = $request->longitude;
+
+                if ($existingAddress->save()) {
+                    return response()->json(['success' => true, 'message' => 'Location updated successfully']);
+                }
+            } else {
+                // Create a new address entry for the authenticated user
+                $address = new Address();
+                $address->latitude = $request->latitude;
+                $address->longitude = $request->longitude;
+                $address->user_id = $userId;
+
+                if ($address->save()) {
+                    return response()->json(['success' => true, 'message' => 'Location saved successfully']);
+                }
+            }
         } else {
-            return response()->json(['success' => false], 500);
+            // Check for an existing latitude and longitude for guests (non-authenticated users)
+            $existingAddress = Address::whereNull('user_id')
+                ->where('latitude', $request->latitude)
+                ->where('longitude', $request->longitude)
+                ->first();
+
+            if ($existingAddress) {
+                // Update the existing guest address if found
+                $existingAddress->latitude = $request->latitude;
+                $existingAddress->longitude = $request->longitude;
+
+                if ($existingAddress->save()) {
+                    return response()->json(['success' => true, 'message' => 'Guest location updated successfully']);
+                }
+            } else {
+                // Create a new address entry for the guest user
+                $address = new Address();
+                $address->latitude = $request->latitude;
+                $address->longitude = $request->longitude;
+                $address->user_id = null;
+
+                if ($address->save()) {
+                    return response()->json(['success' => true, 'message' => 'Guest location saved successfully']);
+                }
+            }
         }
+
+        return response()->json(['success' => false, 'message' => 'Failed to save location'], 500);
     }
+
 
     public function careersList()
     {

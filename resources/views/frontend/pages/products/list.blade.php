@@ -256,7 +256,7 @@
                                 </div>
                                 <div class="product-action">
                                     <!-- Action buttons like Compare, Add to Cart, Wishlist -->
-                                    <a href="javascript:void(0);" class="product-compare"><i class="ti-control-shuffle"></i></a>
+                                    <a href="{{ route('checkout.index', ['product_id' => $row->id]) }}" class="product-buy-now">Buy Now</a>
                                     <input type="hidden" value="1" min="1" class="product-quantity" />
                                     <a href="javascript:void(0);" class="add-to-cart" data-product-id="{{ $row->id }}">Add to Cart</a>
                                     <a href="javascript:void(0);" class="product-wishlist" data-product-id="{{ $row->id }}"><i class="ti-heart"></i></a>
