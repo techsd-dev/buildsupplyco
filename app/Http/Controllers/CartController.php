@@ -17,23 +17,41 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        if (!Auth::check()) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Please log in to add products to the cart'], 401);
-            }
-            return redirect()->route('login'); 
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // Use the authenticated user's ID
+            $userId = Auth::id();
+            $sessionId = null; // No session ID needed for authenticated users
+        } else {
+            // Use the session ID for guest users
+            $userId = null; // No user ID for guest users
+            $sessionId = session()->getId(); // Get the session ID
         }
+
+        // Get the product from the database
         $product = Product::findOrFail($request->product_id);
-        $cartItem = Cart::where('user_id', Auth::id())
+
+        // Check if the product already exists in the cart for this user (either authenticated or guest)
+        $cartItem = Cart::where(function ($query) use ($userId, $sessionId) {
+            // Check for either user_id or session_id
+            if ($userId) {
+                $query->where('user_id', $userId);
+            } elseif ($sessionId) {
+                $query->where('session_id', $sessionId);
+            }
+        })
             ->where('product_id', $product->id)
             ->first();
 
+        // If the product is already in the cart, increase the quantity
         if ($cartItem) {
             $cartItem->quantity += $request->quantity;
             $cartItem->save();
         } else {
+            // Otherwise, create a new cart item for the user or guest
             Cart::create([
-                'user_id' => Auth::id(),
+                'user_id' => $userId,  // Store the Auth ID for authenticated users
+                'session_id' => $sessionId, // Store the session ID for guest users
                 'product_id' => $product->id,
                 'quantity' => $request->quantity,
             ]);
@@ -41,6 +59,8 @@ class CartController extends Controller
 
         return response()->json(['success' => 'Product added to cart']);
     }
+
+
 
     public function updateCart(Request $request, $id)
     {

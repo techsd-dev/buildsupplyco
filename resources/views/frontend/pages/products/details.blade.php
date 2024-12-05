@@ -53,14 +53,18 @@
                         @endif
                     </div>
                 </div>
-
+              @php 
+              $split = str_split($product->prd_description, 500);
+              $desc = $split[0].'...';
+              @endphp 
                 <!-- Product Information Section -->
                 <div class="col-lg-7 mt-sm-50">
                     <div class="row">
                         <div class="col-lg-8 col-md-7">
                             <div class="product-details-desc">
                                 <h2>{{ $product->prd_name }}</h2>
-                                <ul>{!! $product->prd_description !!}</ul>
+                                <h3>Price: ₹{{ $product->prd_price }}</h3>
+                                <ul>{!! $desc !!}</ul>
                                 <div class="product-meta">
                                     <ul class="list-none">
                                         <li>SKU: {{ $product->slug }}<span>|</span></li>
@@ -87,9 +91,9 @@
                         <!-- Additional Product Actions (like Price, Add to Cart) -->
                         <div class="col-lg-4 col-md-5">
                             <div class="product-action stuck text-left">
-                                <div class="free-delivery">
+                                <!-- <div class="free-delivery">
                                     <a href="#"><i class="ti-truck"></i> Free Delivery</a>
-                                </div>
+                                </div> -->
                                 <div class="product-price-rating">
                                     {{--<del>₹{{ $product->prd_price }}</del>--}}
                                     <span>₹{{ $product->prd_price }}</span>
@@ -114,47 +118,72 @@
                 </div>
             </div>
         </div>
+        {!! $product->prd_description !!}
+        <!-- Related Products Section -->
+        <div class="related-products mt-50">
+            <h3>Related Products</h3>
+            <div class="row">
+                @forelse($relatedProducts as $related)
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="single-product">
+                        <div class="product-img">
+                            <a href="{{ route('product.details', $related->slug) }}">
+                                <img class="default-img" src="{{ asset('public/uploads/products/' . $related->prd_image) }}" alt="{{ $related->prd_name }}">
+                            </a>
+                        </div>
+                        <div class="product-content">
+                            <h3><a href="{{ route('product.details', $related->slug) }}">{{ $related->prd_name }}</a></h3>
+                            <div class="product-price">
+                                <span>₹{{ $related->prd_price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <p class="col-12">No related products found.</p>
+                @endforelse
+            </div>
+        </div>
     </div>
 </div>
 <!--product-details-area end-->
 <script>
-   document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-    let productId = this.getAttribute('data-product-id');
-    let quantity = document.querySelector('input[type="number"]').value;
+    document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+        let productId = this.getAttribute('data-product-id');
+        let quantity = document.querySelector('input[type="number"]').value;
 
-    fetch("{{ route('cart.add') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                product_id: productId,
-                quantity: quantity
+        fetch("{{ route('cart.add') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
             })
-        })
-        .then(response => {
-            if (response.headers.get('Content-Type').includes('text/html')) {
-                throw new Error('Please log in to add products to the cart');
-            }
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.error || 'An error occurred');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert(data.success);
-                window.location.reload();
-            } else {
-                alert(data.error);
-            }
-        })
-        .catch(error => alert(error.message));
-});
-
+            .then(response => {
+                if (response.headers.get('Content-Type').includes('text/html')) {
+                    throw new Error('Please log in to add products to the cart');
+                }
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'An error occurred');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.success);
+                    window.location.reload();
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => alert(error.message));
+    });
 </script>
 
 @endsection

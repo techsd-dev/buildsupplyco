@@ -117,7 +117,7 @@ class RegisterController extends Controller
                 "Please enter this code on the verify otp page to complete your sign-up process. Remember, this OTP is valid for only 120 seconds.\n\n" .
                 "If you did not initiate this request, please disregard this email.\n\n" .
                 "Thank you,\n" .
-                "BuildSupplyPro",
+                "BuildSupplyCo",
             function ($message) use ($user) {
                 $message->to($user->email)
                     ->subject('Your Registration OTP');

@@ -420,19 +420,19 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="brand-items">
-                    <?php if(isset($categories) && $categories->isNotEmpty()): ?>
-                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if(isset($brands) && $brands->isNotEmpty()): ?>
+                    <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="brand-item" title="<?php echo e($row->name); ?>">
-                        <a href="<?php echo e(route('prodList', $row->slug)); ?>">
+                        <a href="<?php echo e(route('by.brnd.prodList', $row->slug)); ?>">
                             <img class="brand-static"
-                                src="<?php echo e(url('public/uploads/categories/', $row->images)); ?>"
+                                src="<?php echo e(url('public/uploads/brands/', $row->image)); ?>"
                                 alt="<?php echo e($row->name); ?>" />
                         </a>
                     </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <?php else: ?>
                     <div class="brand-item">
-                        <p>No categories available.</p>
+                        <p>No brands available.</p>
                     </div>
                     <?php endif; ?>
 

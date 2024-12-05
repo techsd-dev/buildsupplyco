@@ -5,11 +5,11 @@
         <!-- Dark Logo-->
         <a href="index" class="logo logo-dark">
             <span class="logo-sm">
-            <strong> BuildSupplyPro</strong>
+            <strong> BuildSupplyCo</strong>
                 <!-- <img src="{{ URL::asset('public/build/images/logo-sm.png') }}" alt="" height="22"> -->
             </span>
             <span class="logo-lg">
-                <strong> BuildSupplyPro</strong>
+                <strong> BuildSupplyCo</strong>
                 <!-- <img src="{{ URL::asset('public/build/images/logo-dark.png') }}" alt="" height="17"> -->
             </span>
         </a>

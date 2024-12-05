@@ -14,7 +14,11 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('backend.admin.dashboard');
+        if (auth()->user()->role == 1) {
+         return view('backend.admin.dashboard');
+        }else{
+            return redirect('user-login');
+        }
     }
 
 }

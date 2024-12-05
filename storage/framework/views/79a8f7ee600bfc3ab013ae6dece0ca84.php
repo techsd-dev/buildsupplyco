@@ -53,14 +53,18 @@
                         <?php endif; ?>
                     </div>
                 </div>
-
+              <?php 
+              $split = str_split($product->prd_description, 500);
+              $desc = $split[0].'...';
+              ?> 
                 <!-- Product Information Section -->
                 <div class="col-lg-7 mt-sm-50">
                     <div class="row">
                         <div class="col-lg-8 col-md-7">
                             <div class="product-details-desc">
                                 <h2><?php echo e($product->prd_name); ?></h2>
-                                <ul><?php echo $product->prd_description; ?></ul>
+                                <h3>Price: ₹<?php echo e($product->prd_price); ?></h3>
+                                <ul><?php echo $desc; ?></ul>
                                 <div class="product-meta">
                                     <ul class="list-none">
                                         <li>SKU: <?php echo e($product->slug); ?><span>|</span></li>
@@ -87,9 +91,9 @@
                         <!-- Additional Product Actions (like Price, Add to Cart) -->
                         <div class="col-lg-4 col-md-5">
                             <div class="product-action stuck text-left">
-                                <div class="free-delivery">
+                                <!-- <div class="free-delivery">
                                     <a href="#"><i class="ti-truck"></i> Free Delivery</a>
-                                </div>
+                                </div> -->
                                 <div class="product-price-rating">
                                     
                                     <span>₹<?php echo e($product->prd_price); ?></span>
@@ -114,47 +118,73 @@
                 </div>
             </div>
         </div>
+        <?php echo $product->prd_description; ?>
+
+        <!-- Related Products Section -->
+        <div class="related-products mt-50">
+            <h3>Related Products</h3>
+            <div class="row">
+                <?php $__empty_1 = true; $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $related): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="single-product">
+                        <div class="product-img">
+                            <a href="<?php echo e(route('product.details', $related->slug)); ?>">
+                                <img class="default-img" src="<?php echo e(asset('public/uploads/products/' . $related->prd_image)); ?>" alt="<?php echo e($related->prd_name); ?>">
+                            </a>
+                        </div>
+                        <div class="product-content">
+                            <h3><a href="<?php echo e(route('product.details', $related->slug)); ?>"><?php echo e($related->prd_name); ?></a></h3>
+                            <div class="product-price">
+                                <span>₹<?php echo e($related->prd_price); ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                <p class="col-12">No related products found.</p>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </div>
 <!--product-details-area end-->
 <script>
-   document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-    let productId = this.getAttribute('data-product-id');
-    let quantity = document.querySelector('input[type="number"]').value;
+    document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+        let productId = this.getAttribute('data-product-id');
+        let quantity = document.querySelector('input[type="number"]').value;
 
-    fetch("<?php echo e(route('cart.add')); ?>", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                product_id: productId,
-                quantity: quantity
+        fetch("<?php echo e(route('cart.add')); ?>", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: quantity
+                })
             })
-        })
-        .then(response => {
-            if (response.headers.get('Content-Type').includes('text/html')) {
-                throw new Error('Please log in to add products to the cart');
-            }
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.error || 'An error occurred');
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert(data.success);
-                window.location.reload();
-            } else {
-                alert(data.error);
-            }
-        })
-        .catch(error => alert(error.message));
-});
-
+            .then(response => {
+                if (response.headers.get('Content-Type').includes('text/html')) {
+                    throw new Error('Please log in to add products to the cart');
+                }
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'An error occurred');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.success);
+                    window.location.reload();
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => alert(error.message));
+    });
 </script>
 
 <?php $__env->stopSection(); ?>

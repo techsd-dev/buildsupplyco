@@ -141,7 +141,7 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 										<li><a href="#">Our Brands <b class="caret"></b></a>
 											<ul class="submenu">
 												<?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-												<li><a href="<?php echo e(route('by.brnd.prodList', $brand->id)); ?>"><?php echo e($brand->name); ?></a></li>
+												<li><a href="<?php echo e(route('by.brnd.prodList', $brand->slug)); ?>"><?php echo e($brand->name); ?></a></li>
 												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 											</ul>
 										</li>
@@ -207,7 +207,7 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 						<div class="col-xl-4 col-lg-3">
 							<div class="mini-cart pull-right">
 								<ul>
-									<li><a href="#" title="Track Your Order"><i class="ti-truck"></i></a></li>
+									<!-- <li><a href="#" title="Track Your Order"><i class="ti-truck"></i></a></li> -->
 									<li>
 										<a href="<?php echo e(route('wishlist.index')); ?>">
 											<i class="icon_heart_alt"></i>
@@ -222,53 +222,62 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 									<!-- resources/views/frontend/partials/header.blade.php -->
 
 									<?php
-									use App\Models\Cart;
-									use Illuminate\Support\Facades\Auth;
+    use App\Models\Cart;
+    use Illuminate\Support\Facades\Auth;
 
-									$cartItems = Auth::check() ? Cart::where('user_id', Auth::id())->with('product')->get() : collect();
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // For authenticated users, get the cart items based on the authenticated user ID
+        $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
+    } else {
+        // For guest users, get the cart items based on the session ID
+        $cartItems = Cart::where('session_id', session()->getId())->with('product')->get();
+    }
 
-									$totalPrice = $cartItems->sum(function ($item) {
-									return $item->product->prd_price * $item->quantity;
-									});
-									?>
+    // Calculate the total price
+    $totalPrice = $cartItems->sum(function ($item) {
+        return $item->product->prd_price * $item->quantity;
+    });
+?>
 
-									<li>
-										<a href="javascript:void(0);" class="minicart-icon">
-											<i class="icon_bag_alt"></i>
-											<span class="total-price">₹<?php echo e($totalPrice); ?></span>
-											<span class="cart-count"><?php echo e($cartItems->count()); ?></span>
-										</a>
-										<div class="cart-dropdown">
-											<ul>
-												<?php $__currentLoopData = $cartItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-												<li>
-													<div class="mini-cart-thumb">
-														<a href="#"><img src="<?php echo e(asset('public/uploads/products/' . $item->product->prd_image)); ?>" alt="" /></a>
-													</div>
-													<div class="mini-cart-heading">
-														<span>₹<?php echo e($item->product->prd_price); ?> x <?php echo e($item->quantity); ?></span>
-														<h5><a href="#"><?php echo e($item->product->prd_name); ?></a></h5>
-													</div>
-													<div class="mini-cart-remove">
-														<form action="<?php echo e(route('cart.remove')); ?>" method="POST">
-															<?php echo csrf_field(); ?>
-															<input type="hidden" name="id" value="<?php echo e($item->id); ?>">
-															<button onclick="return confirm('Are sure want to remove from cart?');" type="submit" class="btn btn-sm btn-danger"><i class="ti-close"></i></button>
-														</form>
-													</div>
-												</li>
-												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-											</ul>
-											<div class="minicart-total fix">
-												<span class="pull-left">Total:</span>
-												<span class="pull-right">₹<?php echo e($totalPrice); ?></span>
-											</div>
-											<div class="mini-cart-checkout">
-												<a href="<?php echo e(route('cart.index')); ?>" class="btn-common view-cart">VIEW CART</a>
-												<a href="<?php echo e(route('checkout.index')); ?>" class="btn-common checkout mt-10">CHECK OUT</a>
-											</div>
-										</div>
-									</li>
+<li>
+    <a href="javascript:void(0);" class="minicart-icon">
+        <i class="icon_bag_alt"></i>
+        <span class="total-price">₹<?php echo e($totalPrice); ?></span>
+        <span class="cart-count"><?php echo e($cartItems->count()); ?></span>
+    </a>
+    <div class="cart-dropdown">
+        <ul>
+            <?php $__currentLoopData = $cartItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <li>
+                <div class="mini-cart-thumb">
+                    <a href="#"><img src="<?php echo e(asset('public/uploads/products/' . $item->product->prd_image)); ?>" alt="" /></a>
+                </div>
+                <div class="mini-cart-heading">
+                    <span>₹<?php echo e($item->product->prd_price); ?> x <?php echo e($item->quantity); ?></span>
+                    <h5><a href="#"><?php echo e($item->product->prd_name); ?></a></h5>
+                </div>
+                <div class="mini-cart-remove">
+                    <form action="<?php echo e(route('cart.remove')); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <input type="hidden" name="id" value="<?php echo e($item->id); ?>">
+                        <button onclick="return confirm('Are sure want to remove from cart?');" type="submit" class="btn btn-sm btn-danger"><i class="ti-close"></i></button>
+                    </form>
+                </div>
+            </li>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </ul>
+        <div class="minicart-total fix">
+            <span class="pull-left">Total:</span>
+            <span class="pull-right">₹<?php echo e($totalPrice); ?></span>
+        </div>
+        <div class="mini-cart-checkout">
+            <a href="<?php echo e(route('cart.index')); ?>" class="btn-common view-cart">VIEW CART</a>
+            <a href="<?php echo e(route('checkout.index')); ?>" class="btn-common checkout mt-10">CHECK OUT</a>
+        </div>
+    </div>
+</li>
+
 
 								</ul>
 							</div>

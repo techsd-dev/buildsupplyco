@@ -40,7 +40,7 @@
                                     </h5>
                                     <small class="text-muted">In stock</small>
                                 </td>
-                                <td class="fw-bold">₹{{ $item->product->prd_discount_price }}</td>
+                                <td class="fw-bold">₹{{ $item->product->prd_price }}</td>
                                 <td class="text-center">
                                     <form action="{{ route('wishlist.remove') }}" method="POST" class="d-inline">
                                         @csrf

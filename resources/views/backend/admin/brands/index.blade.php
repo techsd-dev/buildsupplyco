@@ -1,14 +1,19 @@
 @extends('backend.layouts.master')
-@section('title') Brands @endsection
+@section('title') Brand @endsection
 @section('content')
 <!-- Include SweetAlert CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
+<style>
+    .error-message {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Brands List</h4>
+                <h4 class="card-title mb-0">Brand List</h4>
             </div><!-- end card header -->
 
             <div class="card-body">
@@ -43,6 +48,7 @@
                                     </th> -->
                                     <th class="sort" data-sort="customer_name">Sr. No.</th>
                                     <th class="sort" data-sort="customer_name">Name</th>
+                                    <th class="sort" data-sort="Image">Image</th>
                                     <th class="sort" data-sort="status">Status</th>
                                     <th class="sort" data-sort="action">Action</th>
                                 </tr>
@@ -66,7 +72,8 @@
                                         </div>
                                     </td> -->
                                     <td>{{ $key + 1 }}</td> <!-- Serial number -->
-                                    <td class="customer_name">{{ $row->name }}</td> <!-- brands name -->
+                                    <td class="customer_name">{{ $row->name }}</td> <!-- Brand name -->
+                                    <td class="image"><img src="{{ url('public/uploads/brands/',$row->image) }}" height="50px" width="80px" alt=""></td>
                                     <td class="status">
                                         <span class="badge 
                                             @if($row->status == 'active') 
@@ -129,31 +136,44 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalgridLabel">brands Add</h5>
+                    <h5 class="modal-title" id="exampleModalgridLabel">Brand Add</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Add/Edit Modal Form -->
-                    <form id="brandsForm" method="POST">
-                        @csrf <!-- Include CSRF token for protection -->
-                        <input type="hidden" id="brandsId" name="id"> <!-- Hidden input for brands ID (for editing) -->
+                    <form id="brandForm" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" id="brandId" name="id">
 
                         <div class="row g-3">
                             <div class="col-xxl-12">
                                 <div>
-                                    <label for="brandsName" class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control" id="brandsName" placeholder="Enter brands name" required>
+                                    <label for="brandName" class="form-label">Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="name" class="form-control" id="brandName" placeholder="Enter brand name">
                                 </div>
                             </div><!--end col-->
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-control" id="status" name="status">
+                            <!-- Status Field -->
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="brandStatus" class="form-label">Status <span class="text-danger">*</span></label>
+                                    <select name="status" class="form-control" id="brandStatus" required>
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div><!--end col-->
+
+                            <!-- Image Upload Input -->
+                            <div class="col-xxl-12">
+                                <div>
+                                    <label for="brandImage" class="form-label">brand Image</label>
+                                    <input type="file" name="image" class="form-control" id="brandImage">
+                                    <div id="imagePreview" class="mt-3">
+                                        <!-- Image preview area will be dynamically updated -->
+                                    </div>
+                                </div>
+                            </div><!--end col-->
+
                             <div class="col-lg-12">
                                 <div class="hstack gap-2 justify-content-end">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -161,8 +181,12 @@
                                 </div>
                             </div><!--end col-->
                         </div><!--end row-->
+                        <div id="loading" style="display: none;">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -178,7 +202,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this brands?</p>
+                <p>Are you sure you want to delete this brand?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
@@ -191,169 +215,4 @@
 @endsection
 @section('script')
 @endsection
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Include SweetAlert JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
-<!-- =============== brands section start============== -->
-<script>
-    $(document).ready(function() {
-        $('#brandsForm').on('submit', function(e) {
-            e.preventDefault();
-
-            var form = $(this);
-            var actionUrl;
-            var method;
-
-            // Check if it's an add or edit action
-            if ($('#brandsId').val() === "") {
-                // Add brands
-                actionUrl = "{{ route('brands.store') }}";
-                method = 'POST';
-            } else {
-                // Edit brands
-                var brandsId = $('#brandsId').val();
-                actionUrl = "{{ route('brands.update', '') }}/" + brandsId;
-                method = 'POST';
-            }
-
-            // AJAX request
-            $.ajax({
-                url: actionUrl,
-                type: method,
-                data: form.serialize(),
-                success: function(response) {
-                    if (response.success) {
-                        $('#exampleModalgrid').modal('hide');
-                        Swal.fire('Success!', response.message, 'success').then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire('Error!', response.message, 'error');
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire('Error!', 'Something went wrong!', 'error');
-                }
-            });
-        });
-
-        // Handle click event on Edit button
-        $('.edit-item-btn').on('click', function() {
-            var brandsId = $(this).data('id');
-            var brandsName = $(this).data('name');
-            var brandsStatus = $(this).data('status');
-
-            $('#brandsId').val(brandsId);
-            $('#brandsName').val(brandsName);
-            $('#exampleModalgridLabel').text('Edit brands');
-        });
-    });
-
-    function deleteSingle(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ route('brands.delete') }}",
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id: id
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire('Deleted!', response.message, 'success');
-                            window.location.reload();
-                        } else {
-                            Swal.fire('Error!', response.message, 'error');
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire('Error!', 'An error occurred while processing your request.', 'error');
-                    }
-                });
-            }
-        });
-    }
-
-    // brands filter 
-    $(document).ready(function() {
-        $('.search').on('keyup', function() {
-            var query = $(this).val();
-
-            $.ajax({
-                url: "{{ route('brands.search') }}",
-                type: "GET",
-                data: {
-                    query: query
-                },
-                success: function(response) {
-                    // Clear the current table
-                    $('tbody.list').empty();
-
-                    if (response.success && response.brands.length > 0) {
-                        // Loop through brands and append rows dynamically
-                        $.each(response.brands, function(index, brands) {
-                            var statusClass = brands.status === 'active' ?
-                                'bg-success-subtle text-success' :
-                                'bg-danger-subtle text-danger';
-
-                            var row = `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td class="customer_name">${brands.name}</td>
-                                <td class="status">
-                                    <span class="badge ${statusClass} text-uppercase">
-                                        ${brands.status.charAt(0).toUpperCase() + brands.status.slice(1)}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex gap-2">
-                                        <div class="edit">
-                                            <button class="btn btn-sm btn-success edit-item-btn"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#exampleModalgrid"
-                                                data-id="${brands.id}"
-                                                data-name="${brands.name}"
-                                                data-status="${brands.status}">
-                                                Edit
-                                            </button>
-                                        </div>
-                                        <div class="remove">
-                                            <button class="btn btn-sm btn-danger remove-item-btn"
-                                                data-id="${brands.id}"
-                                                onclick="deleteSingle(${brands.id})">
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                            $('tbody.list').append(row);
-                        });
-                    } else {
-                        var noResultsRow = `
-                        <tr>
-                            <td colspan="4" class="text-center">No brands found</td>
-                        </tr>
-                    `;
-                        $('tbody.list').append(noResultsRow);
-                    }
-                },
-                // error: function(xhr) {
-                //     Swal.fire('Error!', 'Something went wrong!', 'error');
-                // }
-            });
-        });
-    });
-</script>
-<!-- =============== brands section end============== -->
+@include('backend.admin.brands.ajax')

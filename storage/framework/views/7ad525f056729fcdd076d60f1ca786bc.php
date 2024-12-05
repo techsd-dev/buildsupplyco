@@ -1,6 +1,6 @@
-@extends('backend.layouts.master')
-@section('title') Product @endsection
-@section('content')
+
+<?php $__env->startSection('title'); ?> Product <?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
 <!-- Include SweetAlert CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -18,10 +18,10 @@
                                 <div class="card-body">
                                     <div class="live-preview">
                                         <!-- Form to create product -->
-                                        <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
-                                            @csrf
+                                        <form action="<?php echo e(route('product.store')); ?>" method="POST" enctype="multipart/form-data">
+                                            <?php echo csrf_field(); ?>
 
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>">
                                             <!-- Categories -->
                                             <div class="row">
                                                 <!-- Categories -->
@@ -29,9 +29,9 @@
                                                     <div class="form-floating">
                                                         <select name="category_id" class="form-select" id="categorySelect" required>
                                                             <option value="" selected disabled>Select a category</option>
-                                                            @foreach($categories as $category)
-                                                            <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                                            @endforeach
+                                                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($category->id); ?>" <?php echo e($product->category_id == $category->id ? 'selected' : ''); ?>><?php echo e($category->name); ?></option>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </select>
                                                         <label for="categorySelect">Category <span class="text-danger">*</span></label>
                                                     </div>
@@ -53,9 +53,9 @@
                                                     <div class="form-floating">
                                                         <select name="brand_id" class="form-select" id="brandSelect" required>
                                                             <option value="" selected disabled>Select a brand</option>
-                                                            @foreach($brands as $row)
-                                                            <option value="{{ $row->id }}" {{ $product->brand_id == $row->id ? 'selected' : '' }}>{{ $row->name }}</option>
-                                                            @endforeach
+                                                            <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($row->id); ?>" <?php echo e($product->brand_id == $row->id ? 'selected' : ''); ?>><?php echo e($row->name); ?></option>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </select>
                                                         <label for="brandSelect">Brands <span class="text-danger">*</span></label>
                                                     </div>
@@ -63,7 +63,7 @@
                                                 <!-- Product Name -->
                                                 <div class="col-lg-6">
                                                     <div class="form-floating">
-                                                        <input type="text" name="prd_name" class="form-control" value="{{ $product->prd_name }}" id="productNameInput" placeholder="Enter product name" required>
+                                                        <input type="text" name="prd_name" class="form-control" value="<?php echo e($product->prd_name); ?>" id="productNameInput" placeholder="Enter product name" required>
                                                         <label for="productNameInput">Product Name <span class="text-danger">*</span></label>
                                                     </div>
                                                 </div>
@@ -73,14 +73,14 @@
                                                 <!-- Price -->
                                                 <div class="col-lg-6">
                                                     <div class="form-floating">
-                                                        <input type="number" name="prd_price" class="form-control" value="{{ $product->prd_price }}" id="priceInput" placeholder="Enter product price" required>
+                                                        <input type="number" name="prd_price" class="form-control" value="<?php echo e($product->prd_price); ?>" id="priceInput" placeholder="Enter product price" required>
                                                         <label for="priceInput">Price <span class="text-danger">*</span></label>
                                                     </div>
                                                 </div>
                                                 <!-- Discount Price -->
                                                 <div class="col-lg-6">
                                                     <div class="form-floating">
-                                                        <input type="number" name="prd_discount_price" class="form-control" value="{{ $product->prd_discount_price }}" id="discountInput" placeholder="Enter product discount price">
+                                                        <input type="number" name="prd_discount_price" class="form-control" value="<?php echo e($product->prd_discount_price); ?>" id="discountInput" placeholder="Enter product discount price">
                                                         <label for="discountInput">Discount Price</label>
                                                     </div>
                                                 </div>
@@ -90,7 +90,7 @@
                                                 <!-- Quantity -->
                                                 <div class="col-lg-6">
                                                     <div class="form-floating">
-                                                        <input type="number" name="qty" class="form-control" value="{{ $product->qty }}" id="quantityInput" placeholder="Enter product quantity" required>
+                                                        <input type="number" name="qty" class="form-control" value="<?php echo e($product->qty); ?>" id="quantityInput" placeholder="Enter product quantity" required>
                                                         <label for="quantityInput">Quantity <span class="text-danger">*</span></label>
                                                     </div>
                                                 </div>
@@ -99,7 +99,7 @@
                                                     <div class="form-floating">
                                                         <input type="file" name="prd_image" class="form-control" id="singleImageInput" accept="image/*" >
                                                         <label for="singleImageInput">Upload Product Image <span class="text-danger">*</span></label>
-                                                        <img src="{{ $product->prd_image ? url('public/uploads/products/' . $product->prd_image) : asset('default-image.jpg') }}" height="20px" width="40px" alt="Product Image">
+                                                        <img src="<?php echo e($product->prd_image ? url('public/uploads/products/' . $product->prd_image) : asset('default-image.jpg')); ?>" height="20px" width="40px" alt="Product Image">
                                                         <div id="singleImagePreview" class="mt-2"></div>
                                                     </div>
                                                 </div>
@@ -111,9 +111,9 @@
                                                     <div class="form-floating">
                                                         <input type="file" name="prd_images[]" class="form-control" id="multipleImageInput" accept=".png,.jpg,jpeg,webp,gif" multiple>
                                                         <label for="multipleImageInput">Upload Additional Product Images (Optional)</label>
-                                                        @foreach(explode(',', $product->prd_images) as $img)
-                                                        <img src="{{ $img ? url('public/uploads/products/' . $img) : asset('default-image.jpg') }}" height="20px" width="40px" alt="Product Image">
-                                                        @endforeach
+                                                        <?php $__currentLoopData = explode(',', $product->prd_images); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <img src="<?php echo e($img ? url('public/uploads/products/' . $img) : asset('default-image.jpg')); ?>" height="20px" width="40px" alt="Product Image">
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         <div id="multipleImagePreview" class="mt-2 d-flex flex-wrap gap-2"></div>
                                                     </div>
                                                 </div>
@@ -121,8 +121,8 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-floating">
                                                         <select name="status" class="form-select" id="statusSelect" required>
-                                                            <option value="1" {{ $product->status == 1 ? 'selected' : '' }}>Active</option>
-                                                            <option value="0" {{ $product->status == 0 ? 'selected' : '' }}>Inactive</option>
+                                                            <option value="1" <?php echo e($product->status == 1 ? 'selected' : ''); ?>>Active</option>
+                                                            <option value="0" <?php echo e($product->status == 0 ? 'selected' : ''); ?>>Inactive</option>
                                                         </select>
                                                         <label for="statusSelect">Status <span class="text-danger">*</span></label>
                                                     </div>
@@ -133,7 +133,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="form-floating">
-                                                        <textarea name="prd_description" class="form-control" id="descriptionInput" placeholder="Enter product description">{{ $product->prd_description }}</textarea>
+                                                        <textarea name="prd_description" class="form-control" id="descriptionInput" placeholder="Enter product description"><?php echo e($product->prd_description); ?></textarea>
                                                         <label for="descriptionInput"></label>
                                                     </div>
                                                 </div>
@@ -154,11 +154,11 @@
         </div><!-- end card -->
     </div><!-- end col -->
 </div><!-- end row -->
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ URL::asset('public/build/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+<script src="<?php echo e(URL::asset('public/build/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js')); ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
@@ -171,7 +171,7 @@
 
             if (categoryId) {
                 $.ajax({
-                    url: "{{ route('get.subcategories') }}",
+                    url: "<?php echo e(route('get.subcategories')); ?>",
                     type: "GET",
                     data: {
                         category_id: categoryId
@@ -179,7 +179,7 @@
                     success: function(response) {
                         if (response.subcategories.length > 0) {
                             $.each(response.subcategories, function(key, subcategory) {
-                                var selected = (subcategory.id == '{{ $product->sub_category_id }}') ? 'selected' : '';
+                                var selected = (subcategory.id == '<?php echo e($product->sub_category_id); ?>') ? 'selected' : '';
                                 $('#subCategorySelect').append('<option value="' + subcategory.id + '" ' + selected + '>' + subcategory.name + '</option>');
                             });
                         } else {
@@ -255,4 +255,5 @@
     });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('backend.layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\buildsupplyco\resources\views/backend/admin/products/edit.blade.php ENDPATH**/ ?>

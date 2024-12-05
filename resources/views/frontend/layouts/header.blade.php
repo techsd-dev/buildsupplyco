@@ -141,7 +141,7 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 										<li><a href="#">Our Brands <b class="caret"></b></a>
 											<ul class="submenu">
 												@foreach($brands as $brand)
-												<li><a href="{{ route('by.brnd.prodList', $brand->id) }}">{{ $brand->name }}</a></li>
+												<li><a href="{{ route('by.brnd.prodList', $brand->slug) }}">{{ $brand->name }}</a></li>
 												@endforeach
 											</ul>
 										</li>
@@ -154,7 +154,7 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 						</div>
 						<div class="col-lg-2">
 							<div class="register-login pull-right">
-								@if(Auth::check())
+								@if(Auth::check() && Auth::user()->role == 0)
 								<a href="{{ url('user-dashboard') }}" class="btn btn-sm btn-success text-white"><strong><i class="fa fa-user"></i></strong>
 									Profile
 								</a>
@@ -207,7 +207,7 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 						<div class="col-xl-4 col-lg-3">
 							<div class="mini-cart pull-right">
 								<ul>
-									<li><a href="#" title="Track Your Order"><i class="ti-truck"></i></a></li>
+									<!-- <li><a href="#" title="Track Your Order"><i class="ti-truck"></i></a></li> -->
 									<li>
 										<a href="{{ route('wishlist.index') }}">
 											<i class="icon_heart_alt"></i>
@@ -222,53 +222,62 @@ $subCategories = App\Models\SubCategory::orderBy('id', 'DESC')->get();
 									<!-- resources/views/frontend/partials/header.blade.php -->
 
 									@php
-									use App\Models\Cart;
-									use Illuminate\Support\Facades\Auth;
+    use App\Models\Cart;
+    use Illuminate\Support\Facades\Auth;
 
-									$cartItems = Auth::check() ? Cart::where('user_id', Auth::id())->with('product')->get() : collect();
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        // For authenticated users, get the cart items based on the authenticated user ID
+        $cartItems = Cart::where('user_id', Auth::id())->with('product')->get();
+    } else {
+        // For guest users, get the cart items based on the session ID
+        $cartItems = Cart::where('session_id', session()->getId())->with('product')->get();
+    }
 
-									$totalPrice = $cartItems->sum(function ($item) {
-									return $item->product->prd_price * $item->quantity;
-									});
-									@endphp
+    // Calculate the total price
+    $totalPrice = $cartItems->sum(function ($item) {
+        return $item->product->prd_price * $item->quantity;
+    });
+@endphp
 
-									<li>
-										<a href="javascript:void(0);" class="minicart-icon">
-											<i class="icon_bag_alt"></i>
-											<span class="total-price">₹{{ $totalPrice }}</span>
-											<span class="cart-count">{{ $cartItems->count() }}</span>
-										</a>
-										<div class="cart-dropdown">
-											<ul>
-												@foreach ($cartItems as $item)
-												<li>
-													<div class="mini-cart-thumb">
-														<a href="#"><img src="{{ asset('public/uploads/products/' . $item->product->prd_image) }}" alt="" /></a>
-													</div>
-													<div class="mini-cart-heading">
-														<span>₹{{ $item->product->prd_price }} x {{ $item->quantity }}</span>
-														<h5><a href="#">{{ $item->product->prd_name }}</a></h5>
-													</div>
-													<div class="mini-cart-remove">
-														<form action="{{ route('cart.remove') }}" method="POST">
-															@csrf
-															<input type="hidden" name="id" value="{{ $item->id }}">
-															<button onclick="return confirm('Are sure want to remove from cart?');" type="submit" class="btn btn-sm btn-danger"><i class="ti-close"></i></button>
-														</form>
-													</div>
-												</li>
-												@endforeach
-											</ul>
-											<div class="minicart-total fix">
-												<span class="pull-left">Total:</span>
-												<span class="pull-right">₹{{ $totalPrice }}</span>
-											</div>
-											<div class="mini-cart-checkout">
-												<a href="{{ route('cart.index') }}" class="btn-common view-cart">VIEW CART</a>
-												<a href="{{ route('checkout.index') }}" class="btn-common checkout mt-10">CHECK OUT</a>
-											</div>
-										</div>
-									</li>
+<li>
+    <a href="javascript:void(0);" class="minicart-icon">
+        <i class="icon_bag_alt"></i>
+        <span class="total-price">₹{{ $totalPrice }}</span>
+        <span class="cart-count">{{ $cartItems->count() }}</span>
+    </a>
+    <div class="cart-dropdown">
+        <ul>
+            @foreach ($cartItems as $item)
+            <li>
+                <div class="mini-cart-thumb">
+                    <a href="#"><img src="{{ asset('public/uploads/products/' . $item->product->prd_image) }}" alt="" /></a>
+                </div>
+                <div class="mini-cart-heading">
+                    <span>₹{{ $item->product->prd_price }} x {{ $item->quantity }}</span>
+                    <h5><a href="#">{{ $item->product->prd_name }}</a></h5>
+                </div>
+                <div class="mini-cart-remove">
+                    <form action="{{ route('cart.remove') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $item->id }}">
+                        <button onclick="return confirm('Are sure want to remove from cart?');" type="submit" class="btn btn-sm btn-danger"><i class="ti-close"></i></button>
+                    </form>
+                </div>
+            </li>
+            @endforeach
+        </ul>
+        <div class="minicart-total fix">
+            <span class="pull-left">Total:</span>
+            <span class="pull-right">₹{{ $totalPrice }}</span>
+        </div>
+        <div class="mini-cart-checkout">
+            <a href="{{ route('cart.index') }}" class="btn-common view-cart">VIEW CART</a>
+            <a href="{{ route('checkout.index') }}" class="btn-common checkout mt-10">CHECK OUT</a>
+        </div>
+    </div>
+</li>
+
 
 								</ul>
 							</div>

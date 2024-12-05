@@ -95,8 +95,9 @@
                                                     <!-- Image Upload -->
                                                     <div class="col-lg-6">
                                                         <div class="form-floating">
-                                                            <input type="file" name="prd_image" class="form-control" id="imageInput" accept="image/*">
-                                                            <label for="imageInput">Upload Product Image <span class="text-danger">*</span></label>
+                                                            <input type="file" name="prd_image" class="form-control" id="singleImageInput" accept="image/*">
+                                                            <label for="singleImageInput">Upload Product Image <span class="text-danger">*</span></label>
+                                                            <div id="singleImagePreview" class="mt-2"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -104,8 +105,9 @@
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="form-floating">
-                                                    <input type="file" name="prd_images[]" class="form-control" id="datasheetInput" accept=".png,.jpg,jpeg,web,gif" multiple>
-                                                    <label for="datasheetInput">Upload Product Images (Optional)</label>
+                                                    <input type="file" name="prd_images[]" class="form-control" id="multipleImageInput" accept=".png,.jpg,jpeg,web,gif" multiple>
+                                                    <label for="multipleImageInput">Upload Product Images (Optional)</label>
+                                                    <div id="multipleImagePreview" class="mt-2 d-flex flex-wrap gap-2"></div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
@@ -193,4 +195,65 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function () {
+        // Preview Single Image with Remove Button
+        $('#singleImageInput').on('change', function (event) {
+            var file = event.target.files[0];
+            var previewContainer = $('#singleImagePreview');
+            previewContainer.empty(); // Clear previous preview
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    previewContainer.html(`
+                        <div class="image-preview-container" style="position: relative; display: inline-block;">
+                            <img src="${e.target.result}" class="img-thumbnail" style="width: 150px; height: 150px;">
+                            <button type="button" class="btn-close remove-image" style="position: absolute; top: 5px; right: 5px; background-color: white;" data-input="#singleImageInput"></button>
+                        </div>
+                    `);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Preview Multiple Images with Remove Button
+        $('#multipleImageInput').on('change', function (event) {
+            var files = event.target.files;
+            var previewContainer = $('#multipleImagePreview');
+            previewContainer.empty(); // Clear previous previews
+
+            Array.from(files).forEach((file, index) => {
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewContainer.append(`
+                            <div class="image-preview-container" style="position: relative; display: inline-block;">
+                                <img src="${e.target.result}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                <button type="button" class="btn-close remove-image" style="position: absolute; top: 5px; right: 5px; background-color: white;" data-index="${index}"></button>
+                            </div>
+                        `);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // Remove Image Preview
+        $(document).on('click', '.remove-image', function () {
+            var inputSelector = $(this).data('input'); // For single image
+            var index = $(this).data('index'); // For multiple images
+            if (inputSelector) {
+                // Clear input value and preview for single image
+                $(inputSelector).val('');
+                $('#singleImagePreview').empty();
+            } else {
+                // Remove specific image preview for multiple images
+                $(this).parent('.image-preview-container').remove();
+            }
+        });
+    });
+</script>
+
+
 @endsection

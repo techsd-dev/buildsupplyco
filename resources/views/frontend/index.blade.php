@@ -1909,10 +1909,10 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="brand-items">
-					@foreach($categories as $row)
+					@foreach($brands as $row)
 					<div class="brand-item" title="{{ $row->name }}">
-						<a href="{{ route('prodList',$row->slug) }}">
-							<img class="brand-static" src="{{ url('public/uploads/categories/',$row->images) }}" alt="" />
+						<a href="{{ route('by.brnd.prodList', $row->slug) }}">
+							<img class="brand-static" src="{{ url('public/uploads/brands/',$row->image) }}" alt="" />
 						</a>
 					</div>
 					@endforeach

@@ -22,7 +22,7 @@
                 <div class="col-lg-12">
                     <div class="text-center mt-sm-5 mb-4 text-white-50">
                         <div>
-                            <h4 class="text-white">BuildSupplyPro</h4>
+                            <h4 class="text-white">BuildSupplyCo</h4>
                             <!-- <a href="index" class="d-inline-block auth-logo">
                                 <img src="{{ URL::asset('public/build/images/logo-light.png')}}" alt="" height="20">
                             </a> -->
@@ -40,7 +40,7 @@
                         <div class="card-body p-4">
                             <div class="text-center mt-2">
                                 <h5 class="text-primary">Welcome Back !</h5>
-                                <p class="text-muted">Sign in to continue to BuildSupplyPro.</p>
+                                <p class="text-muted">Sign in to continue to BuildSupplyCo.</p>
                             </div>
                             <div class="p-2 mt-4">
                                 <form action="{{ route('login') }}" method="POST">
@@ -117,7 +117,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="text-center">
-                        <p class="mb-0 text-muted">&copy; <script>document.write(new Date().getFullYear())</script> BuildSupplyPro. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                        <p class="mb-0 text-muted">&copy; <script>document.write(new Date().getFullYear())</script> BuildSupplyCo. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
                     </div>
                 </div>
             </div>

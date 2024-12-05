@@ -54,7 +54,7 @@ class ForgotPasswordController extends Controller
                 "This link will expire in 60 minutes.\n\n" .
                 "If you did not request a password reset, please ignore this email.\n\n" .
                 "Thank you,\n" .
-                "BuildSupplyPro",
+                "BuildSupplyCo",
             function ($message) use ($user) {
                 $message->to($user->email)
                     ->subject('Reset Your Password');

@@ -1,7 +1,7 @@
 <!--footer-area start-->
 @php
 $settings = App\Models\Setting::find(1);
-$cat = App\Models\Category::orderBy('id', 'DESC')->limit(7)->get();
+$cat = App\Models\Category::orderBy('id', 'DESC')->limit(5)->get();
 @endphp
 <footer class="footer-area mt-50">
     <div class="container-fluid">

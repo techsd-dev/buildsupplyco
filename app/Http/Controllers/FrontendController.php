@@ -19,6 +19,7 @@ use App\Models\VulnerabilityDisclosuePolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class FrontendController extends Controller
 {
@@ -26,6 +27,7 @@ class FrontendController extends Controller
     {
         $data['banners'] = Banner::orderBy('id', 'ASC')->limit(2)->get();
         $data['subBanners'] = Banner::orderBy('id', 'ASC')->skip(2)->take(4)->get();
+        $data['brands'] = Brand::orderBy('id', 'ASC')->get();
         $data['categories'] = Category::orderBy('id', 'DESC')->get();
         $data['products'] = Product::with(['brand', 'category', 'subcategory'])
             ->limit(3)->where('status', 1)->get();
@@ -91,10 +93,10 @@ class FrontendController extends Controller
     }
 
 
-    public function productListFilterByBrand($id)
+    public function productListFilterByBrand($slug)
     {
         $data['products'] = Product::with(['brand', 'category', 'subcategory'])
-            ->where('brand_id', $id)
+            ->where('brand_id', $slug)
             ->get();
         $data['productsByCat'] = Product::with(['brand', 'category', 'subcategory'])
             ->orderBy('id', 'DESC')->where('status', 1)->get();
@@ -130,9 +132,19 @@ class FrontendController extends Controller
         $data['product'] = Product::with(['brand', 'category', 'subcategory'])
             ->where('slug', $slug)
             ->first();
-        $data['cat'] = Category::orderBy('id', "DESC")->get();
+
+        if (!$data['product']) {
+            abort(404, 'Product not found');
+        }
+        $data['relatedProducts'] = Product::with('brand')
+            ->where('category_id', $data['product']->category_id)
+            ->where('id', '!=', $data['product']->id)
+            ->take(4)
+            ->get();
+        $data['categories'] = Category::orderBy('id', "DESC")->get();
         return view('frontend.pages.products.details', $data);
     }
+
 
 
     public function aboutUs()
@@ -282,8 +294,9 @@ class FrontendController extends Controller
             $imageName = time() . '_' . $prdImage->getClientOriginalName();
             $prdImage->move(public_path('uploads/categories'), $imageName);
         }
+
         // Insert the data into the database
-        DB::table('apply_jobs')->insert([
+        $jobApplicationData = [
             'job_title' => $request->input('job_title'),
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -295,7 +308,34 @@ class FrontendController extends Controller
             'job_description' => $request->input('job_description'),
             'resume' => $imageName,
             'created_at' => now(),
+        ];
+
+        DB::table('apply_jobs')->insert($jobApplicationData);
+
+        // Send email to admin
+        $adminEmail = 'shankar.dayal@cracode.com'; // Replace with the admin's email address
+        $jobDetails = implode("\n", [
+            "Job Title: " . $jobApplicationData['job_title'],
+            "Name: " . $jobApplicationData['name'],
+            "Email: " . $jobApplicationData['email'],
+            "Referenced By: " . $jobApplicationData['referenced_by'],
+            "Mobile: " . $jobApplicationData['mobile'],
+            "Current Location: " . $jobApplicationData['current_location'],
+            "Experience: " . $jobApplicationData['exprience'],
+            "Ready to Relocate: " . ($jobApplicationData['ready_to_relocate'] ? 'Yes' : 'No'),
+            "Job Description: " . $jobApplicationData['job_description'],
+            "Resume: " . url('uploads/categories/' . $jobApplicationData['resume']),
         ]);
+
+        Mail::raw(
+            "Dear Admin,\n\nA new job application has been submitted. Here are the details:\n\n" .
+                $jobDetails .
+                "\n\nThank you,\nBuildSupplyCo",
+            function ($message) use ($adminEmail) {
+                $message->to($adminEmail)
+                    ->subject('New Job Application Received');
+            }
+        );
 
         return redirect('careers')->with('success', 'Job application submitted successfully!');
     }

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class SubCategoryController extends Controller
 {
@@ -49,7 +50,8 @@ class SubCategoryController extends Controller
 
         $subCategory->name = $request->input('name');
         $subCategory->category_id = $request->input('category_id');
-        $subCategory->status = $request->input('status', 'active'); // Default status is active
+        $subCategory->status = $request->input('status', 'active');
+        $subCategory->slug = Str::slug($request->input('name'));
         $subCategory->save();
 
         $message = $id ? 'Sub Category updated successfully!' : 'Sub Category added successfully!';

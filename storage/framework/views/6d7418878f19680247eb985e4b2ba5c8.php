@@ -517,10 +517,10 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="brand-items">
-					<?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+					<?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 					<div class="brand-item" title="<?php echo e($row->name); ?>">
-						<a href="<?php echo e(route('prodList',$row->slug)); ?>">
-							<img class="brand-static" src="<?php echo e(url('public/uploads/categories/',$row->images)); ?>" alt="" />
+						<a href="<?php echo e(route('by.brnd.prodList', $row->slug)); ?>">
+							<img class="brand-static" src="<?php echo e(url('public/uploads/brands/',$row->image)); ?>" alt="" />
 						</a>
 					</div>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -78,12 +78,18 @@ Route::prefix('admin')->group(function () {
     Route::post('category/delete', [CategoryController::class, 'destroy'])->name('category.delete');
     Route::get('category/filter', [CategoryController::class, 'categoryFilter'])->name('category.search');
     
-    // Brands routes
+    // Brand routes
     Route::get('/brands', [BrandController::class, 'index'])->name('brands');
-    Route::post('/brands/store', [BrandController::class, 'store'])->name('brands.store');
-    Route::post('/brands/update/{id}', [BrandController::class, 'update'])->name('brands.update');
+    Route::post('/brands/store', [BrandController::class, 'storeOrUpdate'])->name('brands.storeOrUpdate');
     Route::post('brands/delete', [BrandController::class, 'destroy'])->name('brands.delete');
     Route::get('brands/filter', [BrandController::class, 'brandsFilter'])->name('brands.search');
+
+    // Brands routes
+    // Route::get('/brands', [BrandController::class, 'index'])->name('brands');
+    // Route::post('/brands/store', [BrandController::class, 'store'])->name('brands.store');
+    // Route::post('/brands/update/{id}', [BrandController::class, 'update'])->name('brands.update');
+    // Route::post('brands/delete', [BrandController::class, 'destroy'])->name('brands.delete');
+    // Route::get('brands/filter', [BrandController::class, 'brandsFilter'])->name('brands.search');
 
     // Sub Categories routes
     Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub.categories');
@@ -145,16 +151,16 @@ Route::get('privacy-policy', [FrontendController::class, 'privacyPolicy'])->name
 Route::get('terms-and-conditions', [FrontendController::class, 'termsAndConditions'])->name('trms.n.condi');
 // Products routes 
 Route::get('products/{slug}', [FrontendController::class, 'productList'])->name('prodList');
-Route::get('products-by-brand/{id}', [FrontendController::class, 'productListFilterByBrand'])->name('by.brnd.prodList');
+Route::get('products-by-brand/{slug}', [FrontendController::class, 'productListFilterByBrand'])->name('by.brnd.prodList');
 Route::get('/product-quick-view/{id}', [FrontendController::class, 'productQuickView']);
 Route::get('/product-details/{slug}', [FrontendController::class, 'productDetails'])->name('product.details');
 
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 // Auth routes start 
 Route::middleware('auth')->group(function () {
     Route::get('/user-dashboard', [UserController::class, 'index'])->name('users-dashboard');
     Route::post('/update-auth-users-profile', [UserController::class, 'updateProfile'])->name('update.auth.users.profile');
     Route::post('/user-address-save', [UserController::class, 'updateAddress'])->name('user.address.save');
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/update/{id}', [CartController::class, 'updateCart'])->name('cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     // Route::get('/cart-checkout', [CartController::class, 'chackout'])->name('checkout');
