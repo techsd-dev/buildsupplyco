@@ -13,25 +13,75 @@
 
             <div class="card-body">
                 <div class="listjs-table" id="customerList">
+                    <form method="GET" action="{{ route('products') }}" class="mb-4">
+                        <div class="row">
+                            <!-- Filter by Name -->
+                            <div class="col-md-3">
+                                <input type="text" name="name" class="form-control" placeholder="Product Name" value="{{ request('name') }}">
+                            </div>
+
+                            <!-- Filter by Category -->
+                            <div class="col-md-3">
+                                <select name="category_id" class="form-control">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Filter by Subcategory -->
+                            <div class="col-md-3">
+                                <select name="subcategory_id" class="form-control">
+                                    <option value="">Select Subcategory</option>
+                                    @foreach($subcategories as $subcategory)
+                                    <option value="{{ $subcategory->id }}" {{ request('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
+                                        {{ $subcategory->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Filter by Brand -->
+                            <div class="col-md-3">
+                                <select name="brand_id" class="form-control">
+                                    <option value="">Select Brand</option>
+                                    @foreach($brands as $brand)
+                                    <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
+                                        {{ $brand->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <a href="{{ route('products') }}" class="btn btn-secondary">Reset</a>
+                            </div>
+                        </div>
+                    </form>
                     <div class="row g-4 mb-3">
                         <div class="col-sm-auto">
                             <div>
-                                <a href="{{  route('product.create') }}" class="btn btn-success add-btn"><i
-                                        class="ri-add-line align-bottom me-1"></i> Add</a>
+                               
                                 <!-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                         class="ri-delete-bin-2-line"></i></button> -->
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="d-flex justify-content-sm-end">
-                                <div class="search-box ms-2">
+                            <a href="{{  route('product.create') }}" class="btn btn-success add-btn"><i
+                            class="ri-add-line align-bottom me-1"></i> Add</a>
+                                <!-- <div class="search-box ms-2">
                                     <input type="text" class="form-control search" placeholder="Search...">
                                     <i class="ri-search-line search-icon"></i>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive table-card mt-3 mb-1">
                         <table class="table align-middle table-nowrap" id="productTable">
                             <thead class="table-light">

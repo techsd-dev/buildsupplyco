@@ -12,11 +12,40 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'subCategory', 'brand'])->orderBy('id', 'DESC')->paginate(10);
-        return view('backend.admin.products.index', compact('products'));
+        $query = Product::with(['category', 'subCategory', 'brand']);
+
+        // Filter by name
+        if ($request->filled('name')) {
+            $query->where('prd_name', 'like', '%' . $request->name . '%');
+        }
+
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by subcategory
+        if ($request->filled('subcategory_id')) {
+            $query->where('sub_category_id', $request->subcategory_id);
+        }
+
+        // Filter by brand
+        if ($request->filled('brand_id')) {
+            $query->where('brand_id', $request->brand_id);
+        }
+
+        $data['products'] = $query->orderBy('id', 'DESC')->paginate(10);
+
+        // Pass categories, subcategories, and brands for filtering dropdowns
+        $data['brands'] = Brand::orderBy('id', 'DESC')->get();
+        $data['categories'] = Category::orderBy('id', 'DESC')->get();
+        $data['subcategories'] = SubCategory::orderBy('id', 'DESC')->get();
+
+        return view('backend.admin.products.index', $data);
     }
+
 
     public function destroy(Request $request)
     {

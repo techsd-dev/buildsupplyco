@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -38,5 +39,10 @@ class OrderController extends Controller
         $order->status = $request->status;
         $order->save();
         return response()->json(['success' => true]);
+    }
+
+    public function trHistory(){
+        $transactions = Transaction::with('user')->paginate(10);
+        return view('backend.admin.trasanctions.index', compact('transactions'));
     }
 }

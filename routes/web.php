@@ -127,7 +127,7 @@ Route::prefix('admin')->group(function () {
     Route::get('orders', [OrderController::class, 'orders'])->name('orders');
     Route::get('orders-details/{id}', [OrderController::class, 'viewOrderDetails'])->name('orders.details');
     Route::post('/orders-update-status/{orderId}', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
-
+    Route::get('/trasanction-history', [OrderController::class, 'trHistory'])->name('tr.history');
 });
 
 // Frontend routes

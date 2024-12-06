@@ -57,7 +57,8 @@
                             </li>
                         </ul>
                     </div>
-                </li> <!-- end banners Menu -->
+                </li> <!-- end banner Menu -->
+                
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#careers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="careers">
                         <i class="ri-dashboard-2-line"></i> <span>Careers & Faqs Management</span>
@@ -126,6 +127,18 @@
                     </div>
                     <!-- Sidebar -->
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#trasanctions" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="trasanctions">
+                        <i class="ri-dashboard-2-line"></i> <span>Trasanction Management</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="trasanctions">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('tr.history') }}" class="nav-link">Trasanctions History</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li> <!-- end trasanctions Menu -->
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#contentManagement" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="contentManagement">
                         <i class="ri-dashboard-2-line"></i> <span>Content Management</span>

@@ -13,25 +13,78 @@
 
             <div class="card-body">
                 <div class="listjs-table" id="customerList">
+                    <form method="GET" action="<?php echo e(route('products')); ?>" class="mb-4">
+                        <div class="row">
+                            <!-- Filter by Name -->
+                            <div class="col-md-3">
+                                <input type="text" name="name" class="form-control" placeholder="Product Name" value="<?php echo e(request('name')); ?>">
+                            </div>
+
+                            <!-- Filter by Category -->
+                            <div class="col-md-3">
+                                <select name="category_id" class="form-control">
+                                    <option value="">Select Category</option>
+                                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($category->id); ?>" <?php echo e(request('category_id') == $category->id ? 'selected' : ''); ?>>
+                                        <?php echo e($category->name); ?>
+
+                                    </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+
+                            <!-- Filter by Subcategory -->
+                            <div class="col-md-3">
+                                <select name="subcategory_id" class="form-control">
+                                    <option value="">Select Subcategory</option>
+                                    <?php $__currentLoopData = $subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($subcategory->id); ?>" <?php echo e(request('subcategory_id') == $subcategory->id ? 'selected' : ''); ?>>
+                                        <?php echo e($subcategory->name); ?>
+
+                                    </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+
+                            <!-- Filter by Brand -->
+                            <div class="col-md-3">
+                                <select name="brand_id" class="form-control">
+                                    <option value="">Select Brand</option>
+                                    <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($brand->id); ?>" <?php echo e(request('brand_id') == $brand->id ? 'selected' : ''); ?>>
+                                        <?php echo e($brand->name); ?>
+
+                                    </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <a href="<?php echo e(route('products')); ?>" class="btn btn-secondary">Reset</a>
+                            </div>
+                        </div>
+                    </form>
                     <div class="row g-4 mb-3">
                         <div class="col-sm-auto">
                             <div>
-                                <a href="<?php echo e(route('product.create')); ?>" class="btn btn-success add-btn"><i
-                                        class="ri-add-line align-bottom me-1"></i> Add</a>
+                               
                                 <!-- <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i
                                         class="ri-delete-bin-2-line"></i></button> -->
                             </div>
                         </div>
                         <div class="col-sm">
                             <div class="d-flex justify-content-sm-end">
-                                <div class="search-box ms-2">
+                            <a href="<?php echo e(route('product.create')); ?>" class="btn btn-success add-btn"><i
+                            class="ri-add-line align-bottom me-1"></i> Add</a>
+                                <!-- <div class="search-box ms-2">
                                     <input type="text" class="form-control search" placeholder="Search...">
                                     <i class="ri-search-line search-icon"></i>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive table-card mt-3 mb-1">
                         <table class="table align-middle table-nowrap" id="productTable">
                             <thead class="table-light">

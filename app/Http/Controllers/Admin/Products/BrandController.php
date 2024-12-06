@@ -82,7 +82,7 @@ class BrandController extends Controller
     }
 
 
-    public function brandFilter(Request $request)
+    public function brandsFilter(Request $request)
     {
         $query = $request->get('query');
         $brands = Brand::where('name', 'LIKE', "%{$query}%")

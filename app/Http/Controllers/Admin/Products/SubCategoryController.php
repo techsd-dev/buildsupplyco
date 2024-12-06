@@ -87,8 +87,7 @@ class SubCategoryController extends Controller
     {
         $query = $request->input('query');
         $categories = SubCategory::where('name', 'LIKE', "%{$query}%")
-            ->get();
-
+        ->get();
         return response()->json([
             'success' => true,
             'categories' => $categories,

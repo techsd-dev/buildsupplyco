@@ -114,8 +114,6 @@ class PhonePecontroller extends Controller
     public function response(Request $request)
     {
         $input = $request->all();
-        \Log::info('PhonePe API response: ' . json_encode($input));
-
         $saltKey = 'eb94b389-9708-439e-a03b-333941a6be6a';
         $saltIndex = 1;
 
@@ -128,13 +126,9 @@ class PhonePecontroller extends Controller
             ->withHeader('X-MERCHANT-ID:' . $input['transactionId'])
             ->get();
 
-
-        \Log::info('PhonePe API status response: ' . $response);
-
         $res = json_decode($response);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            \Log::error('Failed to decode PhonePe API status response: ' . json_last_error_msg());
             return redirect()->back()->with('error', 'You have exceeded your payment limit. Please try again after 24 hours.');
         }
         if (isset($input['code']) && $input['code'] === 'PAYMENT_SUCCESS') {
