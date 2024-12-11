@@ -14,15 +14,29 @@ class OrderController extends Controller
         $this->middleware('auth');
     }
 
-    public function orders()
+    public function orders(Request $request)
     {
-        $orders = Order::with([
-            'user',
-            'orderItems.product',
-            'transactions'
-        ])->orderBy('id', 'DESC')->paginate(10);
+        $query = Order::with(['user', 'orderItems.product', 'transactions'])->orderBy('id', 'DESC');
+        if ($request->filled('order_status')) {
+            $query->where('status', $request->order_status);
+        }
+        if ($request->filled('transaction_status')) {
+            $query->whereHas('transactions', function ($q) use ($request) {
+                $q->where('status', $request->transaction_status);
+            });
+        }
+
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+        $orders = $query->paginate(10);
         return view('backend.admin.orders.index', compact('orders'));
     }
+
 
     public function viewOrderDetails($id)
     {
@@ -41,8 +55,24 @@ class OrderController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function trHistory(){
-        $transactions = Transaction::with('user')->paginate(10);
+    public function trHistory(Request $request)
+    {
+        $query = Transaction::with('user');
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('user_name')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->user_name . '%');
+            });
+        }
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $query->whereDate('created_at', '<=', $request->end_date);
+        }
+        $transactions = $query->paginate(10);
         return view('backend.admin.trasanctions.index', compact('transactions'));
     }
 }

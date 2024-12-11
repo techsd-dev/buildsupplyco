@@ -16,11 +16,27 @@ class CareerController extends Controller
     }
 
     // List careers with pagination
-    public function index()
+    public function index(Request $request)
     {
-        $careers = Career::orderBy('id', 'DESC')->paginate(10);
+        $query = Career::query();
+
+        // Apply filters if set
+        if ($request->filled('designation')) {
+            $query->where('designation', 'like', '%' . $request->designation . '%');
+        }
+        if ($request->filled('job_location')) {
+            $query->where('job_location', 'like', '%' . $request->job_location . '%');
+        }
+        if ($request->filled('qualification')) {
+            $query->where('qualification', 'like', '%' . $request->qualification . '%');
+        }
+
+        // Pagination
+        $careers = $query->orderBy('id', 'DESC')->paginate(10);
+
         return view('backend.admin.careers.index', compact('careers'));
     }
+
 
     // Store a new career
     public function store(Request $request)
@@ -39,7 +55,7 @@ class CareerController extends Controller
             $imagePath = time() . '-' . $image->getClientOriginalName();
             $image->move(public_path('uploads/careers'), $imagePath);
         }
-        
+
         $slug = STR::slug($request->designation);
         $careers = Career::create([
             'designation'   => $request->designation,
@@ -138,8 +154,35 @@ class CareerController extends Controller
         ]);
     }
 
-    public function jobSeekers(){
-        $data = DB::table('apply_jobs')->orderBy('id', 'DESC')->paginate(10);
+    public function jobSeekers(Request $request)
+    {
+        // Get filter values from the request
+        $name = $request->input('name');
+        $job_title = $request->input('job_title');
+        $location = $request->input('location');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        // Build the query with filters
+        $data = DB::table('apply_jobs')
+            ->when($name, function ($query, $name) {
+                return $query->where('name', 'like', "%$name%");
+            })
+            ->when($job_title, function ($query, $job_title) {
+                return $query->where('job_title', 'like', "%$job_title%");
+            })
+            ->when($location, function ($query, $location) {
+                return $query->where('current_location', 'like', "%$location%");
+            })
+            ->when($start_date, function ($query, $start_date) {
+                return $query->whereDate('created_at', '>=', $start_date);
+            })
+            ->when($end_date, function ($query, $end_date) {
+                return $query->whereDate('created_at', '<=', $end_date);
+            })
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
         return view('backend.admin.careers.jobseekerslist', compact('data'));
     }
 }

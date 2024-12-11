@@ -64,7 +64,6 @@ class PhonePecontroller extends Controller
                         ]);
                     }
                 }
-
                 // Clear cart after order
                 Cart::where('user_id', auth()->id())->delete();
             }

@@ -9,6 +9,41 @@
             <div class="card-header">
                 <h4 class="card-title mb-0">Orders List</h4>
             </div><!-- end card header -->
+            <div class="card-body">
+    <form method="GET" action="{{ route('orders') }}" class="mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-3">
+                <label for="orderStatus" class="form-label">Order Status</label>
+                <select name="order_status" id="orderStatus" class="form-select">
+                    <option value="">All</option>
+                    <option value="pending" {{ request('order_status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="confirmed" {{ request('order_status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                    <option value="delivered" {{ request('order_status') == 'delivered' ? 'selected' : '' }}>Delivered</option>
+                    <option value="cancelled" {{ request('order_status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="transactionStatus" class="form-label">Transaction Status</label>
+                <select name="transaction_status" id="transactionStatus" class="form-select">
+                    <option value="">All</option>
+                    <option value="success" {{ request('transaction_status') == 'success' ? 'selected' : '' }}>Success</option>
+                    <option value="failed" {{ request('transaction_status') == 'failed' ? 'selected' : '' }}>Failed</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" name="start_date" id="startDate" class="form-control" value="{{ request('start_date') }}">
+            </div>
+            <div class="col-md-3">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" name="end_date" id="endDate" class="form-control" value="{{ request('end_date') }}">
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{{ route('orders') }}" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
 
             <div class="card-body">
                 <div class="listjs-table" id="orderList">

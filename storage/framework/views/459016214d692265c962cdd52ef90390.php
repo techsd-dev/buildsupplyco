@@ -10,6 +10,27 @@
             <div class="card-header">
                 <h4 class="card-title mb-0">Career List</h4>
             </div><!-- end card header -->
+            <div class="card-body">
+                <form action="<?php echo e(route('careers')); ?>" method="GET">
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-4">
+                            <input type="text" name="designation" class="form-control" placeholder="Search by Designation" value="<?php echo e(request('designation')); ?>">
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" name="job_location" class="form-control" placeholder="Search by Job Location" value="<?php echo e(request('job_location')); ?>">
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" name="qualification" class="form-control" placeholder="Search by Qualification" value="<?php echo e(request('qualification')); ?>">
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <a href="<?php echo e(route('careers')); ?>" class="btn btn-secondary w-100">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <div class="card-body">
                 <div class="listjs-table" id="customerList">
