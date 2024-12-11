@@ -52,6 +52,7 @@
                         </thead>
                         <tbody>
                             @if(isset($product))
+                            <input type="hidden" name="product_id" value="{{ $product->id }}" id="">
                             <!-- If a single product was passed (Buy Now) -->
                             <tr>
                                 <td>{{ $product->prd_name }}</td>

@@ -52,6 +52,7 @@
                         </thead>
                         <tbody>
                             <?php if(isset($product)): ?>
+                            <input type="hidden" name="product_id" value="<?php echo e($product->id); ?>" id="">
                             <!-- If a single product was passed (Buy Now) -->
                             <tr>
                                 <td><?php echo e($product->prd_name); ?></td>

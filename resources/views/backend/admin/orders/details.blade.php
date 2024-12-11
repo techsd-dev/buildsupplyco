@@ -50,8 +50,8 @@
                                 </td>
                                 <td>{{ $item->product->prd_name ?? 'N/A' }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td>₹{{ number_format($item->prd_price, 2) }}</td>
-                                <td>₹{{ number_format($item->quantity * $item->prd_price, 2) }}</td>
+                                <td>₹{{ number_format($item->price, 2) }}</td>
+                                <td>₹{{ number_format($item->quantity * $item->price, 2) }}</td>
                             </tr>
                             @endforeach
                         </tbody>

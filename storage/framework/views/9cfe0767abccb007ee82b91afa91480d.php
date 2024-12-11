@@ -50,8 +50,8 @@
                                 </td>
                                 <td><?php echo e($item->product->prd_name ?? 'N/A'); ?></td>
                                 <td><?php echo e($item->quantity); ?></td>
-                                <td>₹<?php echo e(number_format($item->prd_price, 2)); ?></td>
-                                <td>₹<?php echo e(number_format($item->quantity * $item->prd_price, 2)); ?></td>
+                                <td>₹<?php echo e(number_format($item->price, 2)); ?></td>
+                                <td>₹<?php echo e(number_format($item->quantity * $item->price, 2)); ?></td>
                             </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>

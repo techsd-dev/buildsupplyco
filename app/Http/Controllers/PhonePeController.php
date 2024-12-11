@@ -49,23 +49,46 @@ class PhonePecontroller extends Controller
                     'payment_method' => $request->payment_method,
                 ]);
 
-                // Add Order Items
-                $cartItems = Cart::where('user_id', auth()->id())->get();
-                foreach ($cartItems as $item) {
-                    $product = Product::find($item->product_id);
-                    $totalAmt = $product->prd_price * $item->quantity;
+                if ($request->has('product_id')) {
+                    // Fetch product details
+                    $product = Product::find($request->product_id);
                     if ($product) {
+                        $quantity = $request->quantity ?? 1; // Default quantity is 1
+                        $totalAmt = $product->prd_price * $quantity;
+            
+                        // Add single product to OrderItem
                         OrderItem::create([
                             'order_id' => $order->id,
                             'price' => $product->prd_price,
                             'total' => $totalAmt,
-                            'product_id' => $item->product_id,
-                            'quantity' => $item->quantity,
+                            'product_id' => $product->id,
+                            'quantity' => $quantity,
                         ]);
+            
+                        // Update order total
+                        $totalPrice += $totalAmt;
                     }
+                } else {
+                    // Fetch products from cart for regular checkout
+                    $cartItems = Cart::where('user_id', auth()->id())->get();
+                    foreach ($cartItems as $item) {
+                        $product = Product::find($item->product_id);
+                        $totalAmt = $product->prd_price * $item->quantity;
+            
+                        if ($product) {
+                            OrderItem::create([
+                                'order_id' => $order->id,
+                                'price' => $product->prd_price,
+                                'total' => $totalAmt,
+                                'product_id' => $item->product_id,
+                                'quantity' => $item->quantity,
+                            ]);
+                            $totalPrice += $totalAmt;
+                        }
+                    }
+                    // Clear cart after order
+                    Cart::where('user_id', auth()->id())->delete();
                 }
-                // Clear cart after order
-                Cart::where('user_id', auth()->id())->delete();
             }
         }
 
