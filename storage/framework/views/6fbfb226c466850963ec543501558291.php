@@ -10,7 +10,7 @@
         <div class="row mt-10">
             <div class="col-lg-8">
                 <h4>Billing Details</h4>
-                <form action="<?php echo e(route('order.n.phonepe')); ?>" method="POST">
+                <form action="<?php echo e(url('razorpay-process')); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label for="name">Full Name <span class="text-danger">*</span></label>

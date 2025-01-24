@@ -63,7 +63,7 @@
                         <div class="col-lg-8 col-md-7">
                             <div class="product-details-desc">
                                 <h2>{{ $product->prd_name }}</h2>
-                                <h3>Price: ₹{{ $product->prd_price }}</h3>
+                                <h3>Price: ₹{{ $product->prd_discount_price }}</h3>
                                 <ul>{!! $desc !!}</ul>
                                 <div class="product-meta">
                                     <ul class="list-none">
@@ -96,7 +96,7 @@
                                 </div> -->
                                 <div class="product-price-rating">
                                     {{--<del>₹{{ $product->prd_price }}</del>--}}
-                                    <span>₹{{ $product->prd_price }}</span>
+                                    <span>₹{{ $product->prd_discount_price }}</span>
                                     <div class="pull-right">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
@@ -134,7 +134,7 @@
                         <div class="product-content">
                             <h3><a href="{{ route('product.details', $related->slug) }}">{{ $related->prd_name }}</a></h3>
                             <div class="product-price">
-                                <span>₹{{ $related->prd_price }}</span>
+                                <span>₹{{ $related->prd_discount_price }}</span>
                             </div>
                         </div>
                     </div>

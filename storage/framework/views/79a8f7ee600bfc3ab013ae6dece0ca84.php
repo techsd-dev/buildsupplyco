@@ -63,7 +63,7 @@
                         <div class="col-lg-8 col-md-7">
                             <div class="product-details-desc">
                                 <h2><?php echo e($product->prd_name); ?></h2>
-                                <h3>Price: ₹<?php echo e($product->prd_price); ?></h3>
+                                <h3>Price: ₹<?php echo e($product->prd_discount_price); ?></h3>
                                 <ul><?php echo $desc; ?></ul>
                                 <div class="product-meta">
                                     <ul class="list-none">
@@ -96,7 +96,7 @@
                                 </div> -->
                                 <div class="product-price-rating">
                                     
-                                    <span>₹<?php echo e($product->prd_price); ?></span>
+                                    <span>₹<?php echo e($product->prd_discount_price); ?></span>
                                     <div class="pull-right">
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
@@ -135,7 +135,7 @@
                         <div class="product-content">
                             <h3><a href="<?php echo e(route('product.details', $related->slug)); ?>"><?php echo e($related->prd_name); ?></a></h3>
                             <div class="product-price">
-                                <span>₹<?php echo e($related->prd_price); ?></span>
+                                <span>₹<?php echo e($related->prd_discount_price); ?></span>
                             </div>
                         </div>
                     </div>

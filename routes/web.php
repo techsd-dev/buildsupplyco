@@ -18,6 +18,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\PhonePecontroller;
+use App\Http\Controllers\RazorpayPaymentController;
 use App\Http\Controllers\WishlistController;
 use App\Models\Product;
 use Illuminate\Mail\Mailables\Content;
@@ -185,6 +186,9 @@ Route::get('/wishlists', [WishlistController::class, 'index'])->name('wishlist.i
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('/get-subcategories/{id}', [FrontendController::class, 'getSubcategories'])->name('getSubcategories');
 Route::post('/apply-job', [FrontendController::class, 'storeJobApplication'])->name('applyJob');
+// razorpay rotues 
+Route::post('razorpay-process', [RazorpayPaymentController::class, 'processPayment']);
+Route::post('razorpay-process-response', [RazorpayPaymentController::class, 'processResponse']);
 
 
 

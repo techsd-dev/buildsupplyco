@@ -10,7 +10,7 @@
         <div class="row mt-10">
             <div class="col-lg-8">
                 <h4>Billing Details</h4>
-                <form action="{{ route('order.n.phonepe') }}" method="POST">
+                <form action="{{ url('razorpay-process') }}" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="name">Full Name <span class="text-danger">*</span></label>
