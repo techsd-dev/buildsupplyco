@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class RazorpayPaymentController extends Controller
@@ -100,9 +101,7 @@ class RazorpayPaymentController extends Controller
                 'currency' => 'INR',
                 'payment_capture' => 1,
             ]);
-            \Log::info('Razorpay Order Created: ', $razorpayOrder->toArray());
         } catch (\Exception $e) {
-            \Log::error('Razorpay Order Error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Payment failed to initialize.');
         }
 
@@ -176,6 +175,8 @@ class RazorpayPaymentController extends Controller
 
                 // Retrieve order details
                 $order = DB::table('transactions')->where('razorpay_order_id', $payment['order_id'])->first();
+                // Send WhatsApp Notification to Vendors
+                $this->whatsAppApi($order->order_id);
                 // Redirect to Thank You Page
                 return view('frontend.pages.thanku', [
                     'mrTrsId' => $merTransactionId,
@@ -186,5 +187,80 @@ class RazorpayPaymentController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Payment failed.');
         }
+    }
+
+    public function whatsAppApi($orderId)
+    {
+        $order = Order::with('orderItems.product')->find($orderId);
+
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        // Order details message
+        $orderDetails = "New Order Received!\n";
+        $orderDetails .= "Order ID: $orderId\n";
+
+        // Loop through order items and pass necessary variables
+        foreach ($order->orderItems as $item) {
+            $productName = $item->product->prd_name;
+            $quantity = $item->quantity;
+            $price = $item->price;
+
+            // Append item details to the message
+            $orderDetails .= "- Product: $productName, Qty: $quantity, Price: ₹$price\n";
+
+            // Call the sendWhatsAppMessageToVendors function with necessary data
+            $this->sendWhatsAppMessageToVendors($productName, $quantity, $price, $orderId);
+        }
+
+        return response()->json(['success' => 'WhatsApp notifications sent to vendors.']);
+    }
+
+
+    public function sendWhatsAppMessageToVendors($productName, $quantity, $price, $orderId)
+    {
+        $url = "https://api.interakt.ai/v1/public/message/";
+        $token = "bWI3bGF4REdoQlJPbWlYdTNZeDR3Z1ZfUHk0LTJGOXhmcjl0amI5V3lzTTo=";
+        $vendors = DB::table('vendors')->get();
+        foreach ($vendors as $vendor) {
+            $phone = $vendor->phone;
+            $orderId = preg_replace('/\s+/', ' ', trim($orderId));
+            $productName = preg_replace('/\s+/', ' ', trim($productName));
+            $quantity = preg_replace('/\s+/', ' ', trim($quantity));
+            $price = preg_replace('/\s+/', ' ', trim($price));
+            $data = [
+                "countryCode" => "+91",
+                "phoneNumber" => $phone,
+                "callbackData" => "some text here",
+                "type" => "Template",
+                "template" => [
+                    "name" => "orders",
+                    "languageCode" => "en",
+                    "bodyValues" => [
+                        $orderId,
+                        $productName,
+                        $quantity,
+                        $price
+                    ]
+                ]
+            ];
+
+            // Set the request headers
+            $headers = [
+                "Content-Type: application/json",
+                "Authorization: Basic $token"
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $response = curl_exec($ch);
+            curl_close($ch);
+        }
+        return $response;
     }
 }

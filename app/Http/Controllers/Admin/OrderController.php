@@ -75,4 +75,8 @@ class OrderController extends Controller
         $transactions = $query->paginate(10);
         return view('backend.admin.trasanctions.index', compact('transactions'));
     }
+
+    public function rcvMsgFrmVndr(Request $request){
+       dd($request->all());
+    }
 }

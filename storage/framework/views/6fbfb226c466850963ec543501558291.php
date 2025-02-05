@@ -14,19 +14,19 @@
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label for="name">Full Name <span class="text-danger">*</span></label>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your Full Name" required>
+                        <input type="text" id="name" name="name" value="Shankar" class="form-control" placeholder="Enter your Full Name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email Address <span class="text-danger">*</span></label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your Email Address" required>
+                        <input type="email" id="email" name="email" value="shankar@gmail.com" class="form-control" placeholder="Enter your Email Address" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone No. <span class="text-danger">*</span></label>
-                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your Phone No." required pattern="^\d{10}$" title="Please enter a 10-digit phone number">
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="Enter your Phone No." required pattern="^\d{10}$" value="8789876565" title="Please enter a 10-digit phone number">
                     </div>
                     <div class="form-group">
                         <label for="address">Shipping Address <span class="text-danger">*</span></label>
-                        <textarea id="address" name="address" class="form-control" placeholder="Enter your Shipping Address" required></textarea>
+                        <textarea id="address" name="address" class="form-control" placeholder="Enter your Shipping Address" required>Agra</textarea>
                     </div>
                     <div class="form-group">
                         <label for="payment_method">Payment Method</label>
